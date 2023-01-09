@@ -196,7 +196,7 @@ namespace sse {
 		_font.loadFromFile("../assets/fonts/Operator-Mono/Fonts/OperatorMono-Medium.otf");
 		_text.setFont(_font);
 
-		// _imIO->IniFilename = "../src/imgui.ini";
+		_imIO->IniFilename = "../resources/layouts/default.ini";
 
 		setFancyImguiStyle();
 
