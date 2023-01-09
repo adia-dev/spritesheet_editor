@@ -11,19 +11,20 @@ namespace sse {
 	  public:
 		static Application* GetInstance() {
 			if (_instance == nullptr) {
-				_instance = new Application();
+				_instance = std::make_shared<Application>();
 			}
-			return _instance;
+			return _instance.get();
 		}
 
 		int Run();
 		int InitImGuiSFML();
 
-	  private:
 		Application();
 		virtual ~Application();
-		inline static Application* _instance = nullptr;
-		void                       setFancyImguiStyle();
+
+	  private:
+		inline static std::shared_ptr<Application> _instance = nullptr;
+		void                                       setFancyImguiStyle();
 
 		void HandleEvents();
 		void Update();

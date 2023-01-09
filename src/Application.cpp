@@ -8,16 +8,10 @@
 namespace sse {
 
 	Application::Application() {
-		assert(_instance == nullptr);
-		_instance = this;
-
 		std::cout << "Application Starting up" << std::endl;
 	}
 
 	Application::~Application() {
-		assert(_instance == this);
-		_instance = nullptr;
-
 		Shutdown();
 	}
 
@@ -148,6 +142,8 @@ namespace sse {
 
 	void Application::Shutdown() {
 		ImGui::SFML::Shutdown();
+
+		std::cout << "Shutting the Application\n";
 
 		delete _window;
 		_window = nullptr;
