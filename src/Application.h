@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "constants.h"
+#include "layers/Viewport.h"
 
 namespace sse {
 	// Application
@@ -17,7 +17,10 @@ namespace sse {
 		}
 
 		int Run();
-		int InitImGuiSFML();
+
+		template<typename T>
+		void PushLayer();
+		void PushLayer(const std::shared_ptr<Layer>& layer);
 
 		Application();
 		virtual ~Application();
@@ -25,6 +28,9 @@ namespace sse {
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;
 		void                                       setFancyImguiStyle();
+
+		int InitImGuiSFML();
+		int InitLayers();
 
 		void HandleEvents();
 		void Update();
@@ -46,10 +52,13 @@ namespace sse {
 		// Application variables
 		ImVec2 _mousePos;
 
+		std::vector<std::shared_ptr<Layer>> _layers;
+
 	  public:
 		Application(Application const&)            = delete;
 		Application& operator=(const Application&) = delete;
 
 		static sf::Color ImVec4toSFColor(ImVec4 color);
 	};
+
 } // namespace sse

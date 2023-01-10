@@ -124,6 +124,12 @@ namespace sse {
 
 		_mousePos = ImGui::GetIO().MousePos;
 
+		float deltaTime = _imIO->DeltaTime;
+
+		for (auto &layer : _layers) {
+			layer->OnUpdate(deltaTime);
+		}
+
 		ImGui::SFML::Update(*_window, _clock.restart());
 	}
 
@@ -131,6 +137,8 @@ namespace sse {
 		ImGui::PushFont(_imFont);
 		ImGui::DockSpaceOverViewport();
 		ImGui::ShowDemoWindow();
+
+		for (auto &layer : _layers) layer->OnRenderUI();
 
 		// ImGui::PopStyleVar();
 		ImGui::PopFont();
@@ -157,6 +165,7 @@ namespace sse {
 
 	int Application::Run() {
 		if (!InitImGuiSFML()) return -1;
+		if (!InitLayers()) return -1;
 
 		while (_window->isOpen()) {
 			HandleEvents();
@@ -208,4 +217,20 @@ namespace sse {
 		return 1;
 	}
 
+	int Application::InitLayers() {
+		PushLayer<Viewport>();
+
+		return 1;
+	}
+
+	//* Thanks TheCherno learned a lot right there eheh
+	template<typename T>
+	void Application::PushLayer() {
+		static_assert(std::is_base_of<Layer, T>::value, "Pushed type that is not subclass of the Layer Class !");
+		_layers.emplace_back(std::make_shared<T>())->OnAttach();
+	}
+
+	void Application::PushLayer(const std::shared_ptr<Layer> &layer) {
+		_layers.emplace_back(layer)->OnAttach();
+	}
 } // namespace sse
