@@ -3,6 +3,8 @@
 //
 #include "Application.h"
 
+#include "components.h"
+
 #include <assert.h>
 
 namespace sse {
@@ -116,6 +118,10 @@ namespace sse {
 					_window->close();
 				}
 			}
+
+			for (auto &layer : _layers) {
+				layer->OnHandleSFMLEvent(event);
+			}
 		}
 	}
 
@@ -139,6 +145,8 @@ namespace sse {
 		ImGui::ShowDemoWindow();
 
 		for (auto &layer : _layers) layer->OnRenderUI();
+
+		Components::ShowBezierDemo();
 
 		// ImGui::PopStyleVar();
 		ImGui::PopFont();

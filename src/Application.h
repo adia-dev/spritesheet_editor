@@ -25,6 +25,11 @@ namespace sse {
 		Application();
 		virtual ~Application();
 
+		static ImVec2            GetMousePos() { return GetInstance()->_mousePos; }
+		static ImGuiIO           GetImGuiIO() { return *GetInstance()->_imIO; }
+		static sf::RenderWindow* GetWindow() { return GetInstance()->_window; }
+		static float             GetDeltaTime() { return GetImGuiIO().DeltaTime; }
+
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;
 		void                                       setFancyImguiStyle();
@@ -39,7 +44,6 @@ namespace sse {
 
 		// SFML
 		sf::RenderWindow* _window = nullptr;
-		sf::RenderTexture _renderTexture;
 		sf::Clock         _clock;
 		sf::Shader        _shader;
 

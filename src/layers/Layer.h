@@ -13,6 +13,8 @@ namespace sse {
 		virtual void OnAttach() {}
 		virtual void OnDettach() {}
 
+		virtual void OnHandleSFMLEvent(sf::Event& event) {}
+		virtual void OnHandleImGuiEvent(ImGuiIO& io) {}
 		virtual void OnUpdate(float dt) {}
 		virtual void OnRenderUI() {}
 
