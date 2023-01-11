@@ -9,6 +9,9 @@ namespace sse {
 	void Viewport::OnAttach() {
 		_view.reset(sf::FloatRect(0, 0, 1000, 1000));
 		_view.setViewport(sf::FloatRect(0, 0, 1, 1));
+
+		_texture.loadFromFile("../assets/images/spritesheets/goku/ssjg.png");
+		_sprite.setTexture(_texture);
 	}
 
 	void Viewport::OnHandleSFMLEvent(sf::Event& event) {
@@ -65,12 +68,12 @@ namespace sse {
 
 	void Viewport::OnUpdate(float dt) {
 		// std::cout << "Update from the viewport: " << dt << std::endl;
-		_zoom = smoothstep(_zoom, _targetZoom, _zoomSpeed * dt);
+		_zoom = lerp(_zoom, _targetZoom, _zoomSpeed * dt);
 
 		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, _zoomSpeed * dt),
 		                lerp(_view.getCenter().y, _desiredViewCenter.y, _zoomSpeed * dt));
 
-		_view.setSize(_viewportRect.GetWidth() * _zoom, _viewportRect.GetHeight() * _zoom);
+		_view.setSize(_view.getSize().x * _zoom, _view.getSize().y * _zoom);
 	}
 	void Viewport::OnRenderUI() {
 		ImGui::Begin("Viewport", &(this->_visible), ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -88,22 +91,24 @@ namespace sse {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
 
 		_view.setSize(viewportSize.x * _zoom, viewportSize.y * _zoom);
-		_renderTexture.setView(_view);
 
 		sf::Vector2f relativeMousePos(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
 		_renderTexture.create(viewportSize.x, viewportSize.y);
 		_renderTexture.clear(sf::Color(11, 11, 11));
 
-		RenderGrid(_renderTexture, _cellSize);
-
+		_renderTexture.setView(_view);
 		sf::CircleShape circle(50);
 		circle.setFillColor(sf::Color::Red);
 		circle.setOrigin(circle.getRadius(), circle.getRadius());
-		circle.setPosition(_view.getCenter() + sf::Vector2f(100.f, 100.f));
+		circle.setPosition(100, 100);
 
 		_renderTexture.draw(circle);
+		_renderTexture.draw(_sprite);
 
+		_renderTexture.setView(_renderTexture.getDefaultView());
 		_renderTexture.display();
+
+		RenderGrid(_renderTexture, _cellSize);
 
 		ImGui::Image(_renderTexture);
 
