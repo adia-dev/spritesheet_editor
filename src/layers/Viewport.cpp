@@ -67,7 +67,8 @@ namespace sse {
 	}
 
 	void Viewport::OnUpdate(float dt) {
-		// std::cout << "Update from the viewport: " << dt << std::endl;
+		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
+
 		_zoom = lerp(_zoom, _targetZoom, _zoomSpeed * dt);
 
 		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, _zoomSpeed * dt),
@@ -80,29 +81,21 @@ namespace sse {
 
 		RenderOverlay();
 
-		ImVec2 viewportSize = ImGui::GetWindowSize();
-		ImVec2 viewportPos  = ImGui::GetWindowPos();
-		ImVec2 mousePos     = Application::GetMousePos();
+		ImVec2       viewportSize = ImGui::GetWindowSize();
+		ImVec2       viewportPos  = ImGui::GetWindowPos();
+		ImVec2       mousePos     = Application::GetMousePos();
+		sf::Vector2f relativeMousePos(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
 
 		_viewportRect =
 		    ImRect(viewportPos,
 		           {viewportPos.x + viewportSize.x, viewportPos.y + viewportSize.y + ImGui::GetFrameHeight()});
 
-		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
-
 		_view.setSize(viewportSize.x * _zoom, viewportSize.y * _zoom);
 
-		sf::Vector2f relativeMousePos(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
 		_renderTexture.create(viewportSize.x, viewportSize.y);
 		_renderTexture.clear(sf::Color(11, 11, 11));
 
 		_renderTexture.setView(_view);
-		sf::CircleShape circle(50);
-		circle.setFillColor(sf::Color::Red);
-		circle.setOrigin(circle.getRadius(), circle.getRadius());
-		circle.setPosition(100, 100);
-
-		_renderTexture.draw(circle);
 		_renderTexture.draw(_sprite);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
@@ -145,6 +138,7 @@ namespace sse {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking |
 		                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
 		                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
 		if (location >= 0) {
 			const float          PAD       = 10.0f;
 			const ImGuiViewport* viewport  = ImGui::GetMainViewport();
@@ -164,7 +158,7 @@ namespace sse {
 			ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 			window_flags |= ImGuiWindowFlags_NoMove;
 		}
-		ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+		ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
 		if (ImGui::Begin("Example: Simple overlay", NULL, window_flags)) {
 			ImGui::Text("Simple overlay\n"
 			            "(right-click to change position)");
@@ -177,6 +171,9 @@ namespace sse {
 			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
 			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
 			ImGui::Text("View Zoom: %.1f", _zoom);
+
+			ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
+			ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
 
 			if (ImGui::BeginPopupContextWindow()) {
 				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;

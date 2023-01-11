@@ -35,6 +35,8 @@ namespace sse {
 		float        _targetZoom        = 1.f;
 		float        _zoomSpeed         = 2.f;
 		sf::Vector2f _desiredViewCenter = {-1.f, -1.f};
+		bool         _snapMovement      = false;
+		bool         _snapZoom          = false;
 
 		// Events
 		bool         _isLeftMousePressed = false;

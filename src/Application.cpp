@@ -198,14 +198,14 @@ namespace sse {
 
 		_imIO = &ImGui::GetIO();
 		_imIO->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		_imIO->FontGlobalScale = 1.25f;
+		_imIO->FontGlobalScale = 1.5f;
 
 		static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
 		ImFontConfig         icons_config;
 		icons_config.MergeMode  = true;
 		icons_config.PixelSnapH = true;
 		_imFont                 = _imIO->Fonts->AddFontFromFileTTF("../assets/fonts/FontAwesome/fa-solid-900.ttf",
-                                                   20.0f,
+                                                   32.0f,
                                                    &icons_config,
                                                    icons_ranges);
 
