@@ -99,6 +99,13 @@ namespace sse {
 			else
 				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
 
+			ImGui::Separator();
+
+			ImGui::Text("Viewport Pos: (%.1f, %.1f)", _viewportRect.Min.x, _viewportRect.Min.y);
+			ImGui::Text("Viewport Size: (%.1f, %.1f)", _viewportRect.Max.x, _viewportRect.Max.y);
+
+			ImGui::Separator();
+
 			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
 			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
 			ImGui::Text("View Zoom: %.1f", _zoom);
@@ -115,6 +122,13 @@ namespace sse {
 			            _selectionRect.width,
 			            _selectionRect.height);
 
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Sprite")) {
+				ImGui::Image(this->_sprite, sf::Vector2f(500, 500));
+				ImGui::TreePop();
+			}
+
 			if (ImGui::BeginPopupContextWindow()) {
 				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
 				if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
@@ -130,7 +144,8 @@ namespace sse {
 		ImVec2 viewportSize = ImGui::GetWindowSize();
 		ImVec2 viewportPos  = ImGui::GetWindowPos();
 		ImVec2 mousePos     = Application::GetMousePos();
-		_viewMousePos = sf::Vector2f(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
+		_viewMousePos =
+		    sf::Vector2f(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeightWithSpacing());
 		// _viewMousePos -= _view.getCenter();
 
 		_viewportRect =
@@ -177,6 +192,17 @@ namespace sse {
 		for (int i = 0; i < target.getSize().x / cellSize; i++) {
 			for (int j = 0; j < target.getSize().y / cellSize; j++) {
 				grid.setPosition(i * cellSize, j * cellSize);
+
+				if (_isLeftMousePressed && _selectionRect.contains(grid.getPosition())) {
+					grid.setOutlineColor(sf::Color(255, 255, 255, 50));
+					grid.setFillColor(sf::Color(255, 255, 255, 50));
+				} else if (grid.getGlobalBounds().contains(_viewMousePos))
+					grid.setOutlineColor(sf::Color::Red);
+				else {
+					grid.setOutlineColor(color);
+					grid.setFillColor(sf::Color::Transparent);
+				}
+
 				target.draw(grid);
 			}
 		}
