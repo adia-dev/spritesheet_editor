@@ -30,17 +30,22 @@ namespace sse {
 
 		// View
 		sf::View     _view;
-		float        _viewSpeed         = 0.5f;
-		float        _zoom              = 1.f;
-		float        _targetZoom        = 1.f;
-		float        _zoomSpeed         = 2.f;
+		sf::Vector2f _viewMousePos;
+		float        _viewSpeed           = 0.5f;
+		float        _zoom                = 1.f;
+		float        _targetZoom          = 1.f;
+		float        _zoomSpeed           = 2.f;
+		float        _zoomDeltaMultiplier = 0.5f;
+
 		sf::Vector2f _desiredViewCenter = {-1.f, -1.f};
-		bool         _snapMovement      = false;
-		bool         _snapZoom          = false;
+
+		bool _snapMovement = false;
+		bool _snapZoom     = false;
 
 		// Events
-		bool         _isLeftMousePressed = false;
-		sf::Vector2f _leftMouseButtonPressedStartPos;
+		bool          _isLeftMousePressed = false;
+		sf::Vector2f  _leftMouseButtonPressedStartPos;
+		sf::FloatRect _selectionRect;
 
 		float smoothstep(float edge0, float edge1, float x);
 		float lerp(float left, float right, float x);
@@ -54,5 +59,6 @@ namespace sse {
 		RenderGrid(sf::RenderTarget& target, float cellSize = 25.f, sf::Color color = sf::Color(111, 111, 111, 111));
 
 		void RenderOverlay();
+		void RenderSelection();
 	};
 } // namespace sse

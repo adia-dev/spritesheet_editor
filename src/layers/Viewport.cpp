@@ -19,7 +19,8 @@ namespace sse {
 
 		if (_viewportRect.Contains(mousePos)) {
 			if (event.type == sf::Event::MouseWheelScrolled) {
-				_targetZoom = std::max(0.1f, std::min(10.f, _targetZoom + event.mouseWheelScroll.delta * 0.1f));
+				_targetZoom =
+				    std::max(0.1f, std::min(10.f, _targetZoom + event.mouseWheelScroll.delta * _zoomDeltaMultiplier));
 			}
 
 			if (event.type == sf::Event::MouseButtonPressed) {
@@ -83,11 +84,11 @@ namespace sse {
 
 		RenderOverlay();
 
-		ImVec2       viewportSize = ImGui::GetWindowSize();
-		ImVec2       viewportPos  = ImGui::GetWindowPos();
-		ImVec2       mousePos     = Application::GetMousePos();
-		sf::Vector2f relativeMousePos(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
-		// relativeMousePos -= _view.getCenter();
+		ImVec2 viewportSize = ImGui::GetWindowSize();
+		ImVec2 viewportPos  = ImGui::GetWindowPos();
+		ImVec2 mousePos     = Application::GetMousePos();
+		_viewMousePos = sf::Vector2f(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
+		// _viewMousePos -= _view.getCenter();
 
 		_viewportRect =
 		    ImRect(viewportPos,
@@ -96,34 +97,15 @@ namespace sse {
 		_view.setSize(viewportSize.x * _zoom, viewportSize.y * _zoom);
 
 		_renderTexture.create(viewportSize.x, viewportSize.y);
-		_renderTexture.clear(sf::Color(11, 11, 11));
+		_renderTexture.clear(sf::Color(0, 0, 0));
 
 		_renderTexture.setView(_view);
 		_renderTexture.draw(_sprite);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
 
-		sf::CircleShape circle(50);
-		circle.setFillColor(sf::Color::Transparent);
-		circle.setOutlineColor(sf::Color::Red);
-		circle.setOutlineThickness(1.f);
-		circle.setOrigin(50, 50);
-		circle.setPosition(relativeMousePos);
-		_renderTexture.draw(circle);
-
-		// _renderTexture.display();
 		RenderGrid(_renderTexture, _cellSize);
-
-		if (_isLeftMousePressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-			sf::RectangleShape rect;
-			rect.setPosition(_leftMouseButtonPressedStartPos);
-			rect.setSize(sf::Vector2f(relativeMousePos - _leftMouseButtonPressedStartPos));
-			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Yellow);
-			rect.setOutlineThickness(1.f);
-
-			_renderTexture.draw(rect);
-		}
+		RenderSelection();
 
 		ImGui::Image(_renderTexture);
 		ImGui::End();
@@ -160,6 +142,7 @@ namespace sse {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking |
 		                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
 		                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+		static bool visible = true;
 
 		if (location >= 0) {
 			const float          PAD       = 10.0f;
@@ -181,7 +164,7 @@ namespace sse {
 			window_flags |= ImGuiWindowFlags_NoMove;
 		}
 		ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
-		if (ImGui::Begin("Overlay", NULL, window_flags)) {
+		if (ImGui::Begin("Overlay", &visible, window_flags)) {
 			ImGui::Text("Info\n"
 			            "(right-click to change position)");
 			ImGui::Separator();
@@ -204,6 +187,14 @@ namespace sse {
 			ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
 			ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
 
+			ImGui::Separator();
+
+			ImGui::Text("Selection Rectangle: (x: %.1f, y: %.1f, w: %.1f, h: %.1f)\n\n",
+			            _selectionRect.left,
+			            _selectionRect.top,
+			            _selectionRect.width,
+			            _selectionRect.height);
+
 			if (ImGui::BeginPopupContextWindow()) {
 				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
 				if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
@@ -211,9 +202,25 @@ namespace sse {
 				if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
 				if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
 				if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
+				if (ImGui::MenuItem("Close")) visible = false;
 				ImGui::EndPopup();
 			}
 		}
 		ImGui::End();
+	}
+	void Viewport::RenderSelection() {
+		if (_isLeftMousePressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			_selectionRect =
+			    sf::FloatRect(_leftMouseButtonPressedStartPos, _viewMousePos - _leftMouseButtonPressedStartPos);
+
+			sf::RectangleShape rect;
+			rect.setPosition(_leftMouseButtonPressedStartPos);
+			rect.setSize(sf::Vector2f(_selectionRect.width, _selectionRect.height));
+			rect.setFillColor(sf::Color::Transparent);
+			rect.setOutlineColor(sf::Color::Yellow);
+			rect.setOutlineThickness(1.f);
+
+			_renderTexture.draw(rect);
+		}
 	}
 } // namespace sse
