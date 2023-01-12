@@ -30,7 +30,7 @@ namespace sse {
 			}
 
 			if (event.type == sf::Event::MouseMoved) {
-				if (_isLeftMousePressed) {
+				if (_isLeftMousePressed && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 					_desiredViewCenter =
 					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _leftMouseButtonPressedStartPos.x,
 					                                     event.mouseMove.y - _leftMouseButtonPressedStartPos.y);
@@ -69,6 +69,8 @@ namespace sse {
 	void Viewport::OnUpdate(float dt) {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNWSE);
+
 		_zoom = lerp(_zoom, _targetZoom, _zoomSpeed * dt);
 
 		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, _zoomSpeed * dt),
@@ -85,6 +87,7 @@ namespace sse {
 		ImVec2       viewportPos  = ImGui::GetWindowPos();
 		ImVec2       mousePos     = Application::GetMousePos();
 		sf::Vector2f relativeMousePos(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeight());
+		// relativeMousePos -= _view.getCenter();
 
 		_viewportRect =
 		    ImRect(viewportPos,
@@ -99,12 +102,30 @@ namespace sse {
 		_renderTexture.draw(_sprite);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
-		_renderTexture.display();
 
+		sf::CircleShape circle(50);
+		circle.setFillColor(sf::Color::Transparent);
+		circle.setOutlineColor(sf::Color::Red);
+		circle.setOutlineThickness(1.f);
+		circle.setOrigin(50, 50);
+		circle.setPosition(relativeMousePos);
+		_renderTexture.draw(circle);
+
+		// _renderTexture.display();
 		RenderGrid(_renderTexture, _cellSize);
 
-		ImGui::Image(_renderTexture);
+		if (_isLeftMousePressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			sf::RectangleShape rect;
+			rect.setPosition(_leftMouseButtonPressedStartPos);
+			rect.setSize(sf::Vector2f(relativeMousePos - _leftMouseButtonPressedStartPos));
+			rect.setFillColor(sf::Color::Transparent);
+			rect.setOutlineColor(sf::Color::Yellow);
+			rect.setOutlineThickness(1.f);
 
+			_renderTexture.draw(rect);
+		}
+
+		ImGui::Image(_renderTexture);
 		ImGui::End();
 	}
 
@@ -125,6 +146,7 @@ namespace sse {
 		grid.setOutlineColor(color);
 		grid.setOutlineThickness(1);
 		grid.setSize(sf::Vector2f(cellSize, cellSize));
+
 		for (int i = 0; i < target.getSize().x / cellSize; i++) {
 			for (int j = 0; j < target.getSize().y / cellSize; j++) {
 				grid.setPosition(i * cellSize, j * cellSize);
@@ -134,7 +156,7 @@ namespace sse {
 	}
 	void Viewport::RenderOverlay() {
 		static int       location     = 0;
-		ImGuiIO&         io           = ImGui::GetIO();
+		ImVec2           mousePos     = Application::GetMousePos();
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking |
 		                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
 		                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
@@ -159,14 +181,21 @@ namespace sse {
 			window_flags |= ImGuiWindowFlags_NoMove;
 		}
 		ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
-		if (ImGui::Begin("Example: Simple overlay", NULL, window_flags)) {
-			ImGui::Text("Simple overlay\n"
+		if (ImGui::Begin("Overlay", NULL, window_flags)) {
+			ImGui::Text("Info\n"
 			            "(right-click to change position)");
 			ImGui::Separator();
 			if (ImGui::IsMousePosValid())
-				ImGui::Text("Mouse Position: (%.1f, %.1f)", io.MousePos.x, io.MousePos.y);
+				ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
 			else
 				ImGui::Text("Mouse Position: <invalid>");
+
+			if (_isLeftMousePressed)
+				ImGui::Text("Left Mouse Button Pressed: (%.1f, %.1f)",
+				            _leftMouseButtonPressedStartPos.x,
+				            _leftMouseButtonPressedStartPos.y);
+			else
+				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
 
 			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
 			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
