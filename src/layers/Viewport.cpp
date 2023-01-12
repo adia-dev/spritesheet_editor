@@ -82,7 +82,50 @@ namespace sse {
 	void Viewport::OnRenderUI() {
 		ImGui::Begin("Viewport", &(this->_visible), ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-		RenderOverlay();
+		RenderOverlay([&](bool& visible, int& location) {
+			ImVec2 mousePos = Application::GetMousePos();
+			ImGui::Text("Info\n"
+			            "(right-click to change position)");
+			ImGui::Separator();
+			if (ImGui::IsMousePosValid())
+				ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
+			else
+				ImGui::Text("Mouse Position: <invalid>");
+
+			if (_isLeftMousePressed)
+				ImGui::Text("Left Mouse Button Pressed: (%.1f, %.1f)",
+				            _leftMouseButtonPressedStartPos.x,
+				            _leftMouseButtonPressedStartPos.y);
+			else
+				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
+
+			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
+			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
+			ImGui::Text("View Zoom: %.1f", _zoom);
+
+			ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
+			ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
+			ImGui::Checkbox("Show Grid: ", &(this->_showGrid));
+
+			ImGui::Separator();
+
+			ImGui::Text("Selection Rectangle: (x: %.1f, y: %.1f, w: %.1f, h: %.1f)\n\n",
+			            _selectionRect.left,
+			            _selectionRect.top,
+			            _selectionRect.width,
+			            _selectionRect.height);
+
+			if (ImGui::BeginPopupContextWindow()) {
+				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
+				if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
+				if (ImGui::MenuItem("Top-left", NULL, location == 0)) location = 0;
+				if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
+				if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
+				if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
+				if (ImGui::MenuItem("Close")) visible = false;
+				ImGui::EndPopup();
+			}
+		});
 
 		ImVec2 viewportSize = ImGui::GetWindowSize();
 		ImVec2 viewportPos  = ImGui::GetWindowPos();
@@ -123,6 +166,8 @@ namespace sse {
 	}
 
 	void Viewport::RenderGrid(sf::RenderTarget& target, float cellSize, sf::Color color) {
+		if (!_showGrid) return;
+
 		sf::RectangleShape grid;
 		grid.setFillColor(sf::Color::Transparent);
 		grid.setOutlineColor(color);
@@ -136,78 +181,7 @@ namespace sse {
 			}
 		}
 	}
-	void Viewport::RenderOverlay() {
-		static int       location     = 0;
-		ImVec2           mousePos     = Application::GetMousePos();
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking |
-		                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
-		                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-		static bool visible = true;
 
-		if (location >= 0) {
-			const float          PAD       = 10.0f;
-			const ImGuiViewport* viewport  = ImGui::GetMainViewport();
-			ImVec2               work_pos  = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
-			ImVec2               work_size = viewport->WorkSize;
-			ImVec2               window_pos, window_pos_pivot;
-			window_pos.x = (location & 1) ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD);
-			window_pos.y =
-			    (location & 2) ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD + ImGui::GetFrameHeight());
-			window_pos_pivot.x = (location & 1) ? 1.0f : 0.0f;
-			window_pos_pivot.y = (location & 2) ? 1.0f : 0.0f;
-			ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			window_flags |= ImGuiWindowFlags_NoMove;
-		} else if (location == -2) {
-			// Center window
-			ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
-			window_flags |= ImGuiWindowFlags_NoMove;
-		}
-		ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
-		if (ImGui::Begin("Overlay", &visible, window_flags)) {
-			ImGui::Text("Info\n"
-			            "(right-click to change position)");
-			ImGui::Separator();
-			if (ImGui::IsMousePosValid())
-				ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
-			else
-				ImGui::Text("Mouse Position: <invalid>");
-
-			if (_isLeftMousePressed)
-				ImGui::Text("Left Mouse Button Pressed: (%.1f, %.1f)",
-				            _leftMouseButtonPressedStartPos.x,
-				            _leftMouseButtonPressedStartPos.y);
-			else
-				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
-
-			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
-			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
-			ImGui::Text("View Zoom: %.1f", _zoom);
-
-			ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
-			ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
-
-			ImGui::Separator();
-
-			ImGui::Text("Selection Rectangle: (x: %.1f, y: %.1f, w: %.1f, h: %.1f)\n\n",
-			            _selectionRect.left,
-			            _selectionRect.top,
-			            _selectionRect.width,
-			            _selectionRect.height);
-
-			if (ImGui::BeginPopupContextWindow()) {
-				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
-				if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
-				if (ImGui::MenuItem("Top-left", NULL, location == 0)) location = 0;
-				if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
-				if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
-				if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
-				if (ImGui::MenuItem("Close")) visible = false;
-				ImGui::EndPopup();
-			}
-		}
-		ImGui::End();
-	}
 	void Viewport::RenderSelection() {
 		if (_isLeftMousePressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 			_selectionRect =
