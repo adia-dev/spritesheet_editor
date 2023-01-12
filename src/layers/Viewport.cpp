@@ -10,8 +10,7 @@ namespace sse {
 		_view.reset(sf::FloatRect(0, 0, 1000, 1000));
 		_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 
-		_texture.loadFromFile("../assets/images/spritesheets/goku/ssjg.png");
-		_sprite.setTexture(_texture);
+		_sprite.setTexture(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
 	}
 
 	void Viewport::OnHandleSFMLEvent(sf::Event& event) {

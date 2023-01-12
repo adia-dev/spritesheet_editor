@@ -4,6 +4,7 @@
 #pragma once
 
 #include "layers/Viewport.h"
+#include "managers/AssetManager.h"
 
 namespace sse {
 	// Application
