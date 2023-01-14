@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include "layers/Hierarchy.h"
 #include "layers/Viewport.h"
 #include "managers/AssetManager.h"
 

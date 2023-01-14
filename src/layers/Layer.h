@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include "constants.h"
+
 namespace sse {
 	// Layer
 	class Layer {
@@ -11,7 +13,7 @@ namespace sse {
 		virtual ~Layer() = default;
 
 		virtual void OnAttach() {}
-		virtual void OnDettach() {}
+		virtual void OnDetach() {}
 
 		virtual void OnHandleSFMLEvent(sf::Event& event) {}
 		virtual void OnHandleImGuiEvent(ImGuiIO& io) {}

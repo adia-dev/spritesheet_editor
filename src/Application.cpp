@@ -227,6 +227,7 @@ namespace sse {
 
 	int Application::InitLayers() {
 		PushLayer<Viewport>();
+		PushLayer<Hierarchy>();
 
 		return 1;
 	}

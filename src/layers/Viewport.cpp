@@ -164,7 +164,7 @@ namespace sse {
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
 
-		RenderGrid(_renderTexture, _cellSize, sf::Color(255, 255, 255, 50));
+		RenderGrid(_renderTexture, _cellSize, sf::Color(100, 100, 100, 50));
 		RenderSelection();
 
 		ImGui::Image(_renderTexture);
@@ -219,8 +219,8 @@ namespace sse {
 			rect.setPosition(_leftMouseButtonPressedStartPos);
 			rect.setSize(sf::Vector2f(_selectionRect.width, _selectionRect.height));
 			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Yellow);
-			rect.setOutlineThickness(1.f);
+			rect.setOutlineColor(sf::Color::Blue);
+			rect.setOutlineThickness(2.f);
 
 			_renderTexture.draw(rect);
 		}
