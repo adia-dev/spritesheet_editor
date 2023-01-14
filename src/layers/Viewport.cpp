@@ -24,8 +24,10 @@ namespace sse {
 
 			if (event.type == sf::Event::MouseButtonPressed) {
 				if (event.mouseButton.button == sf::Mouse::Left) {
-					_isLeftMousePressed             = true;
-					_leftMouseButtonPressedStartPos = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+					_isLeftMousePressed = true;
+					_leftMouseButtonPressedStartPos =
+					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
+					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 				}
 			}
 
@@ -144,7 +146,8 @@ namespace sse {
 		ImVec2 viewportPos  = ImGui::GetWindowPos();
 		ImVec2 mousePos     = Application::GetMousePos();
 		_viewMousePos =
-		    sf::Vector2f(mousePos.x - viewportPos.x, mousePos.y - viewportPos.y - ImGui::GetFrameHeightWithSpacing());
+		    sf::Vector2f(mousePos.x - viewportPos.x - ImGui::GetStyle().WindowPadding.x,
+		                 mousePos.y - viewportPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 		// _viewMousePos -= _view.getCenter();
 
 		_viewportRect =
