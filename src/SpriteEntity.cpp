@@ -24,13 +24,32 @@ namespace sse {
 		v.Visit(this);
 	}
 
-	void SpriteEntity::OnUpdate(float dt) {}
+	void SpriteEntity::OnUpdate(float dt) {
+		_sprite.move(10.f * dt, 0.f);
+		_sprite.setOrigin(sf::Vector2f(_sprite.getGlobalBounds().width / 2.f, _sprite.getGlobalBounds().height / 2.f));
+	}
 
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {}
 
 	void SpriteEntity::OnRenderProperties() {
 		if (ImGui::TreeNode("Sprite Entity")) {
-			ImGui::Text("eheh");
+			{
+				ImVec2 position(_sprite.getPosition().x, _sprite.getPosition().y);
+				float  scale = _sprite.getScale().x;
+
+				if (ImGui::SliderFloat("X", &position.x, -1000.f, 1000.f)) {
+					_sprite.setPosition(position.x, _sprite.getPosition().y);
+				}
+				if (ImGui::SliderFloat("Y", &position.y, -1000.f, 1000.f)) {
+					_sprite.setPosition(_sprite.getPosition().x, position.y);
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::SliderFloat("Scale", &scale, -1.f, 10.f)) {
+					_sprite.setScale(scale, scale);
+				}
+			}
 			ImGui::TreePop();
 		}
 	}
