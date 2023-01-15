@@ -17,9 +17,10 @@ namespace sse {
 	// Inputs
 	class Input {
 	  public:
-		static void HandleEvents(sf::Event& event);
-		static bool IsKeyDown(sf::Keyboard::Key key);
-		static bool IsMouseButtonDown(sf::Mouse::Button button);
+		static void         HandleEvents(sf::Event& event);
+		static bool         IsKeyDown(sf::Keyboard::Key key);
+		static bool         IsMouseButtonDown(sf::Mouse::Button button);
+		static sf::Vector2f GetDirection();
 
 		static std::map<sf::Keyboard::Key, KeyState>& GetKeyboardInputs() { return GetInstance()->_keyboardInputs; }
 		static std::map<sf::Mouse::Button, KeyState>& GetMouseInputs() { return GetInstance()->_mouseInputs; }

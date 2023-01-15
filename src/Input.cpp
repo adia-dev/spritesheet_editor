@@ -48,6 +48,21 @@ namespace sse {
 		return false;
 	}
 
+	sf::Vector2f Input::GetDirection() {
+		sf::Vector2f direction;
+
+		if (IsKeyDown(sf::Keyboard::W) || IsKeyDown(sf::Keyboard::Up)) direction.y -= 1;
+		if (IsKeyDown(sf::Keyboard::S) || IsKeyDown(sf::Keyboard::Down)) direction.y += 1;
+		if (IsKeyDown(sf::Keyboard::A) || IsKeyDown(sf::Keyboard::Left)) direction.x -= 1;
+		if (IsKeyDown(sf::Keyboard::D) || IsKeyDown(sf::Keyboard::Right)) direction.x += 1;
+
+		// normalize the direction
+		float magnitude = sqrt(direction.x * direction.x + direction.y * direction.y);
+		if (magnitude > 0) direction /= magnitude;
+
+		return direction;
+	}
+
 	std::string Input::KeyToString(sf::Keyboard::Key key) {
 		switch (key) {
 			case sf::Keyboard::A:

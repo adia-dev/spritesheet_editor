@@ -209,7 +209,9 @@ namespace sse {
 
 		_imIO = &ImGui::GetIO();
 		_imIO->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		// _imIO->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		_imIO->FontGlobalScale = 1.5f;
+		_imIO->MouseDrawCursor = true;
 
 		static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
 		ImFontConfig         icons_config;

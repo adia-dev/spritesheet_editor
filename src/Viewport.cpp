@@ -60,10 +60,10 @@ namespace sse {
 
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::F1 || event.key.code == sf::Keyboard::Up) {
-					_cellSize = std::min(100.f, _cellSize + 5.f);
+					// _cellSize = std::min(100.f, _cellSize + 5.f);
 				}
 				if (event.key.code == sf::Keyboard::F2 || event.key.code == sf::Keyboard::Down) {
-					_cellSize = std::max(5.f, _cellSize - 5.f);
+					// _cellSize = std::max(5.f, _cellSize - 5.f);
 				}
 			}
 		} else {
@@ -84,12 +84,31 @@ namespace sse {
 	void Viewport::OnUpdate(float dt) {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNWSE);
+		float currentZoomSpeed = _zoomSpeed;
 
-		_zoom = lerp(_zoom, _targetZoom, _zoomSpeed * dt);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			currentZoomSpeed *= 2.f;
+		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+			currentZoomSpeed = 0.1f;
+		}
 
-		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, _zoomSpeed * dt),
-		                lerp(_view.getCenter().y, _desiredViewCenter.y, _zoomSpeed * dt));
+		// move the view
+		_desiredViewCenter += Input::GetDirection() * _viewSpeed * dt;
+
+		// zoom the view
+		if (Input::IsKeyDown(sf::Keyboard::LBracket)) {
+			_targetZoom =
+			    std::max(0.1f, std::min(10.f, lerp(_zoom, _targetZoom, currentZoomSpeed * dt) - _zoomDeltaMultiplier));
+		}
+		if (Input::IsKeyDown(sf::Keyboard::RBracket)) {
+			_targetZoom =
+			    std::max(0.1f, std::min(10.f, lerp(_zoom, _targetZoom, currentZoomSpeed * dt) + _zoomDeltaMultiplier));
+		}
+
+		_zoom = lerp(_zoom, _targetZoom, currentZoomSpeed * dt);
+
+		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, currentZoomSpeed * dt),
+		                lerp(_view.getCenter().y, _desiredViewCenter.y, currentZoomSpeed * dt));
 
 		_view.setSize(_view.getSize().x * _zoom, _view.getSize().y * _zoom);
 	}

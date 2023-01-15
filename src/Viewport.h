@@ -31,7 +31,7 @@ namespace sse {
 		sf::View     _view;
 		sf::View     _minimapView;
 		sf::Vector2f _viewMousePos;
-		float        _viewSpeed           = 0.5f;
+		float        _viewSpeed           = 500.f;
 		float        _zoom                = 1.f;
 		float        _targetZoom          = 1.f;
 		float        _zoomSpeed           = 2.f;
