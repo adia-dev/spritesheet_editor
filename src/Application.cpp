@@ -106,8 +106,10 @@ namespace sse {
 		if (_window == nullptr) return;
 
 		sf::Event event;
+
 		while (_window->pollEvent(event)) {
 			ImGui::SFML::ProcessEvent(event);
+			Input::HandleEvents(event);
 
 			if (event.type == sf::Event::Closed) {
 				_window->close();

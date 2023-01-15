@@ -5,6 +5,7 @@
 
 #include "AssetManager.h"
 #include "Hierarchy.h"
+#include "Input.h"
 #include "SpriteEntity.h"
 #include "Viewport.h"
 

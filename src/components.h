@@ -79,7 +79,7 @@ namespace sse {
 
 			ImRect bb(Window->DC.CursorPos, Window->DC.CursorPos + Canvas);
 			ItemSize(bb);
-			if (!ItemAdd(bb, NULL)) return changed;
+			if (!ItemAdd(bb, (ImGuiID)NULL)) return changed;
 
 			const ImGuiID id = Window->GetID(label);
 			// hovered |= 0 != IsItemHovered(ImRect(bb.Min, bb.Min + ImVec2(avail, dim)), id);
