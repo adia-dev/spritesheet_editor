@@ -17,7 +17,6 @@ namespace sse {
 		SpriteEntity(sf::Texture& texture);
 		~SpriteEntity() = default;
 
-		void Accept(Visitor& v) const override;
 		void OnUpdate(float dt) override;
 		void OnRender(sf::RenderTarget& target) override;
 		void OnRenderProperties() override;
@@ -31,5 +30,8 @@ namespace sse {
 	  private:
 		sf::Sprite  _sprite;
 		sf::Texture _texture;
+
+	  public:
+		void Accept(Visitor& v) const override { v.Visit(this); }
 	};
 } // namespace sse

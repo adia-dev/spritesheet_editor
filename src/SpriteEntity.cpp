@@ -20,14 +20,7 @@ namespace sse {
 		_sprite.setTexture(_texture);
 	}
 
-	void SpriteEntity::Accept(Visitor& v) const {
-		v.Visit(this);
-	}
-
-	void SpriteEntity::OnUpdate(float dt) {
-		_sprite.move(10.f * dt, 0.f);
-		_sprite.setOrigin(sf::Vector2f(_sprite.getGlobalBounds().width / 2.f, _sprite.getGlobalBounds().height / 2.f));
-	}
+	void SpriteEntity::OnUpdate(float dt) {}
 
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {}
 
