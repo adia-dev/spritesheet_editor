@@ -172,13 +172,17 @@ namespace sse {
 	}
 
 	int Application::Run() {
-		if (!InitImGuiSFML()) return -1;
-		if (!InitLayers()) return -1;
+		auto instance = Application::GetInstance();
 
-		while (_window->isOpen()) {
-			HandleEvents();
-			Update();
-			Render();
+		if (instance == nullptr) return -1;
+
+		if (!instance->InitImGuiSFML()) return -1;
+		if (!instance->InitLayers()) return -1;
+
+		while (instance->_window->isOpen()) {
+			instance->HandleEvents();
+			instance->Update();
+			instance->Render();
 		}
 
 		return 0;

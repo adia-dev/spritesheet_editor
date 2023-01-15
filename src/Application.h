@@ -3,9 +3,9 @@
 //
 #pragma once
 
-#include "layers/Hierarchy.h"
-#include "layers/Viewport.h"
-#include "managers/AssetManager.h"
+#include "AssetManager.h"
+#include "Hierarchy.h"
+#include "Viewport.h"
 
 namespace sse {
 	// Application
@@ -18,7 +18,7 @@ namespace sse {
 			return _instance.get();
 		}
 
-		int Run();
+		static int Run();
 
 		template<typename T>
 		void PushLayer();

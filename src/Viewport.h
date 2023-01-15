@@ -3,8 +3,8 @@
 //
 #pragma once
 
+#include "Layer.h"
 #include "constants.h"
-#include "layers/Layer.h"
 
 namespace sse {
 	// Viewport
