@@ -193,15 +193,12 @@ namespace sse {
 			for (int j = 0; j < target.getSize().y / cellSize; j++) {
 				grid.setPosition(i * cellSize, j * cellSize);
 
-				if (_isLeftMousePressed && _selectionRect.contains(grid.getPosition())) {
-					grid.setOutlineColor(sf::Color(255, 255, 255, 50));
-					grid.setFillColor(sf::Color(255, 255, 255, 50));
-				} else if (grid.getGlobalBounds().contains(_viewMousePos))
-					grid.setOutlineColor(sf::Color::Red);
-				else {
-					grid.setOutlineColor(color);
-					grid.setFillColor(sf::Color::Transparent);
-				}
+				// if (grid.getGlobalBounds().contains(_viewMousePos))
+				// 	grid.setOutlineColor(sf::Color::Red);
+				// else {
+				// 	grid.setOutlineColor(color);
+				// 	grid.setFillColor(sf::Color::Transparent);
+				// }
 
 				target.draw(grid);
 			}
