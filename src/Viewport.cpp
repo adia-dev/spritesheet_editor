@@ -27,10 +27,21 @@ namespace sse {
 					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
 					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 				}
+
+				if (event.mouseButton.button == sf::Mouse::Middle) {
+					_isMiddleMousePressed = true;
+					_middleMouseButtonPressedStartPos =
+					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
+					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
+				}
 			}
 
 			if (event.type == sf::Event::MouseMoved) {
-				if (_isLeftMousePressed && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (_isMiddleMousePressed) {
+					_desiredViewCenter =
+					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _middleMouseButtonPressedStartPos.x,
+					                                     event.mouseMove.y - _middleMouseButtonPressedStartPos.y);
+				} else if (_isLeftMousePressed && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 					_desiredViewCenter =
 					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _leftMouseButtonPressedStartPos.x,
 					                                     event.mouseMove.y - _leftMouseButtonPressedStartPos.y);
@@ -40,6 +51,10 @@ namespace sse {
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (event.mouseButton.button == sf::Mouse::Left) {
 					_isLeftMousePressed = false;
+				}
+
+				if (event.mouseButton.button == sf::Mouse::Middle) {
+					_isMiddleMousePressed = false;
 				}
 			}
 
@@ -97,6 +112,13 @@ namespace sse {
 				            _leftMouseButtonPressedStartPos.y);
 			else
 				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
+
+			if (_isMiddleMousePressed)
+				ImGui::Text("Middle Mouse Button Pressed: (%.1f, %.1f)",
+				            _middleMouseButtonPressedStartPos.x,
+				            _middleMouseButtonPressedStartPos.y);
+			else
+				ImGui::Text("Middle Mouse Button Pressed: <not pressed>");
 
 			ImGui::Separator();
 

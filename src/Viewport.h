@@ -44,8 +44,10 @@ namespace sse {
 		bool _showGrid     = true;
 
 		// Events
-		bool          _isLeftMousePressed = false;
+		bool          _isLeftMousePressed   = false;
+		bool          _isMiddleMousePressed = false;
 		sf::Vector2f  _leftMouseButtonPressedStartPos;
+		sf::Vector2f  _middleMouseButtonPressedStartPos;
 		sf::FloatRect _selectionRect;
 
 		float smoothstep(float edge0, float edge1, float x);
