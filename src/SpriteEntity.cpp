@@ -28,6 +28,13 @@ namespace sse {
 
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {}
 
+	void SpriteEntity::OnRenderProperties() {
+		if (ImGui::TreeNode("Sprite Entity")) {
+			ImGui::Text("eheh");
+			ImGui::TreePop();
+		}
+	}
+
 	sf::Sprite& SpriteEntity::GetSprite() {
 		return _sprite;
 	}

@@ -25,6 +25,10 @@ namespace sse {
 		void PushLayer();
 		void PushLayer(const std::shared_ptr<Layer>& layer);
 
+		template<typename T>
+		void PushEntity();
+		void PushEntity(const std::shared_ptr<Entity>& entity);
+
 		Application();
 		virtual ~Application();
 
@@ -33,8 +37,10 @@ namespace sse {
 		static sf::RenderWindow* GetWindow() { return GetInstance()->_window; }
 		static float             GetDeltaTime() { return GetImGuiIO().DeltaTime; }
 
-		static std::shared_ptr<SpriteEntity>       GetSpriteEntity() { return GetInstance()->_spriteEntity; }
 		static std::vector<std::shared_ptr<Layer>> GetLayers() { return GetInstance()->_layers; }
+
+		static std::vector<std::shared_ptr<Entity>> GetEntities() { return GetInstance()->_entities; }
+		static std::shared_ptr<SpriteEntity>        GetSpriteEntity() { return GetInstance()->_spriteEntity; }
 
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;

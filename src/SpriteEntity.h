@@ -20,6 +20,7 @@ namespace sse {
 		void Accept(Visitor& v) const override;
 		void OnUpdate(float dt) override;
 		void OnRender(sf::RenderTarget& target) override;
+		void OnRenderProperties() override;
 
 		sf::Sprite& GetSprite();
 		void        SetSprite(const sf::Sprite& sprite);

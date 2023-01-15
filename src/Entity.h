@@ -23,6 +23,7 @@ namespace sse {
 		virtual void OnUpdate(float dt) = 0;
 		virtual void OnRender() {}
 		virtual void OnRender(sf::RenderTarget& target) {}
+		virtual void OnRenderProperties() {}
 
 	  protected:
 		sf::Vector2f _position;

@@ -238,6 +238,8 @@ namespace sse {
 		_spriteEntity =
 		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
 
+		PushEntity(_spriteEntity);
+
 		return 1;
 	}
 
@@ -257,5 +259,15 @@ namespace sse {
 
 	void Application::PushLayer(const std::shared_ptr<Layer> &layer) {
 		_layers.emplace_back(layer)->OnAttach();
+	}
+
+	template<typename T>
+	void Application::PushEntity() {
+		static_assert(std::is_base_of<Entity, T>::value, "Pushed type that is not subclass of the Entity Class !");
+		_entities.emplace_back(std::make_shared<T>())->OnAwake();
+	}
+
+	void Application::PushEntity(const std::shared_ptr<Entity> &entity) {
+		_entities.emplace_back(entity)->OnAwake();
 	}
 } // namespace sse

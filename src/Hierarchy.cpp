@@ -3,6 +3,8 @@
 //
 #include "Hierarchy.h"
 
+#include "Application.h"
+
 namespace sse {
 	Hierarchy::Hierarchy() {}
 
@@ -14,6 +16,9 @@ namespace sse {
 
 	void Hierarchy::OnRenderUI() {
 		ImGui::Begin("Hierarchy");
+		auto entities = Application::GetEntities();
+
+		for (auto& entity : entities) entity->OnRenderProperties();
 
 		ImGui::End();
 	}
