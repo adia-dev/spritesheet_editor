@@ -5,6 +5,7 @@
 
 #include "AssetManager.h"
 #include "Hierarchy.h"
+#include "SpriteEntity.h"
 #include "Viewport.h"
 
 namespace sse {
@@ -32,11 +33,15 @@ namespace sse {
 		static sf::RenderWindow* GetWindow() { return GetInstance()->_window; }
 		static float             GetDeltaTime() { return GetImGuiIO().DeltaTime; }
 
+		static std::shared_ptr<SpriteEntity>       GetSpriteEntity() { return GetInstance()->_spriteEntity; }
+		static std::vector<std::shared_ptr<Layer>> GetLayers() { return GetInstance()->_layers; }
+
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;
 		void                                       setFancyImguiStyle();
 
 		int InitImGuiSFML();
+		int InitEntities();
 		int InitLayers();
 
 		void HandleEvents();
@@ -58,7 +63,9 @@ namespace sse {
 		// Application variables
 		ImVec2 _mousePos;
 
-		std::vector<std::shared_ptr<Layer>> _layers;
+		std::vector<std::shared_ptr<Layer>>  _layers;
+		std::vector<std::shared_ptr<Entity>> _entities;
+		std::shared_ptr<SpriteEntity>        _spriteEntity = nullptr;
 
 	  public:
 		Application(Application const&)            = delete;

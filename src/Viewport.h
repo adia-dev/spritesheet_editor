@@ -24,7 +24,6 @@ namespace sse {
 
 		// Rendering
 		sf::RenderTexture _renderTexture;
-		sf::Sprite        _sprite;
 		sf::Texture       _texture;
 		float             _cellSize = 25.f;
 

@@ -9,8 +9,6 @@ namespace sse {
 	void Viewport::OnAttach() {
 		_view.reset(sf::FloatRect(0, 0, 1000, 1000));
 		_view.setViewport(sf::FloatRect(0, 0, 1, 1));
-
-		_sprite.setTexture(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
 	}
 
 	void Viewport::OnHandleSFMLEvent(sf::Event& event) {
@@ -126,7 +124,7 @@ namespace sse {
 			ImGui::Separator();
 
 			if (ImGui::TreeNode("Sprite")) {
-				ImGui::Image(this->_sprite, sf::Vector2f(500, 500));
+				ImGui::Image(Application::GetSpriteEntity()->GetSprite(), sf::Vector2f(500, 500));
 				ImGui::TreePop();
 			}
 
@@ -160,7 +158,7 @@ namespace sse {
 		_renderTexture.clear(sf::Color(0, 0, 0));
 
 		_renderTexture.setView(_view);
-		_renderTexture.draw(_sprite);
+		_renderTexture.draw(Application::GetSpriteEntity()->GetSprite());
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
 

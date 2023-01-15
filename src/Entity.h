@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include "Visitor.h"
 #include "constants.h"
 
 namespace sse {
@@ -16,6 +17,12 @@ namespace sse {
 		virtual ~Entity() = default;
 
 		virtual void Accept(Visitor& v) const = 0;
+		virtual void OnAwake() {}
+		virtual void OnDestroy() {}
+
+		virtual void OnUpdate(float dt) = 0;
+		virtual void OnRender() {}
+		virtual void OnRender(sf::RenderTarget& target) {}
 
 	  protected:
 		sf::Vector2f _position;

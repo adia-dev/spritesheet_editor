@@ -132,6 +132,10 @@ namespace sse {
 
 		float deltaTime = _imIO->DeltaTime;
 
+		for (auto entitiy : _entities) {
+			entitiy->OnUpdate(deltaTime);
+		}
+
 		for (auto &layer : _layers) {
 			layer->OnUpdate(deltaTime);
 		}
@@ -177,6 +181,7 @@ namespace sse {
 		if (instance == nullptr) return -1;
 
 		if (!instance->InitImGuiSFML()) return -1;
+		if (!instance->InitEntities()) return -1;
 		if (!instance->InitLayers()) return -1;
 
 		while (instance->_window->isOpen()) {
@@ -225,6 +230,13 @@ namespace sse {
 			std::cerr << "Could not update the font texture.\n";
 			return -1;
 		}
+
+		return 1;
+	}
+
+	int Application::InitEntities() {
+		_spriteEntity =
+		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
 
 		return 1;
 	}

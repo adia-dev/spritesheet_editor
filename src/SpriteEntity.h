@@ -5,17 +5,30 @@
 
 #include "Entity.h"
 
+#include <filesystem>
+
 namespace sse {
 	// SpriteEntity
 	class SpriteEntity: public Entity {
 	  public:
-		SpriteEntity()  = default;
+		SpriteEntity() = default;
+		SpriteEntity(const std::filesystem::path& path);
+		SpriteEntity(sf::Sprite& sprite);
+		SpriteEntity(sf::Texture& texture);
 		~SpriteEntity() = default;
 
-		virtual void Accept(Visitor& v) const = 0;
+		void Accept(Visitor& v) const override;
+		void OnUpdate(float dt) override;
+		void OnRender(sf::RenderTarget& target) override;
+
+		sf::Sprite& GetSprite();
+		void        SetSprite(const sf::Sprite& sprite);
+
+		sf::Texture& GetTexture();
+		void         SetTexture(const sf::Texture& texture);
 
 	  private:
-		sf::Sprite   _sprite;
-		sf::Texture* _texture;
+		sf::Sprite  _sprite;
+		sf::Texture _texture;
 	};
 } // namespace sse
