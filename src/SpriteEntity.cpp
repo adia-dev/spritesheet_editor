@@ -20,11 +20,56 @@ namespace sse {
 		_sprite.setTexture(_texture);
 	}
 
+	void SpriteEntity::OnAwake() {
+		for (int i = 0; i < 10; ++i) {
+			for (int j = 0; j < 10; ++j) {
+				AddFrame(
+				    Frame(sf::IntRect(i * 32, j * 32, 32, 32), "Frame " + std::to_string(i * 10 + j + 1), false, 0.1f));
+			}
+		}
+	}
+
 	void SpriteEntity::OnUpdate(float dt) {}
 
-	void SpriteEntity::OnRender(sf::RenderTarget& target) {}
+	void SpriteEntity::OnRender(sf::RenderTarget& target) {
+		target.draw(_sprite);
+		OnRenderFrames(target);
+	}
+
+	void SpriteEntity::OnRenderFrames(sf::RenderTarget& target) {
+		if (_frames.empty()) return;
+
+		// Draw frames
+		for (auto& frame : _frames) {
+			sf::RectangleShape rect;
+			rect.setPosition(frame.Rect.left, frame.Rect.top);
+			rect.setSize(sf::Vector2f(frame.Rect.width, frame.Rect.height));
+			rect.setFillColor(sf::Color::Transparent);
+
+			if (_currentFrame != nullptr && frame == *_currentFrame)
+				rect.setOutlineColor(sf::Color::Green);
+			else
+				rect.setOutlineColor(sf::Color::Red);
+
+			rect.setOutlineThickness(1.f);
+			target.draw(rect);
+		}
+
+		// Draw frame connections
+		for (auto& frame : _frames) {
+			if (frame.NextFrame != nullptr) {
+				sf::Vertex line[] = {
+				    sf::Vertex(
+				        sf::Vector2f(frame.Rect.left + frame.Rect.width, frame.Rect.top + frame.Rect.height / 2.f)),
+				    sf::Vertex(sf::Vector2f(frame.NextFrame->Rect.left,
+				                            frame.NextFrame->Rect.top + frame.NextFrame->Rect.height / 2.f))};
+				target.draw(line, 2, sf::Lines);
+			}
+		}
+	}
 
 	void SpriteEntity::OnRenderProperties() {
+		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		if (ImGui::TreeNode("Sprite Entity")) {
 			{
 				ImVec2 position(_sprite.getPosition().x, _sprite.getPosition().y);
@@ -41,6 +86,47 @@ namespace sse {
 
 				if (ImGui::SliderFloat("Scale", &scale, -1.f, 10.f)) {
 					_sprite.setScale(scale, scale);
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::Button("Reset")) {
+					_sprite.setPosition(0.f, 0.f);
+					_sprite.setScale(1.f, 1.f);
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::Button("Add Frame")) {
+					AddFrame(Frame(sf::IntRect(0, 0, _texture.getSize().x, _texture.getSize().y),
+					               "Frame " + std::to_string(_frames.size() + 1)));
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::TreeNode("Frames")) {
+					// Draw frames
+					for (auto& frame : _frames) {
+						if (ImGui::TreeNode(frame.Name.c_str())) {
+							_currentFrame = &frame;
+							char buffer[256];
+							strcpy(buffer, frame.Name.c_str());
+							if (ImGui::InputText("Name", buffer, 256)) {
+								frame.Name = buffer;
+							}
+							ImGui::InputInt("X", &frame.Rect.left);
+							ImGui::InputInt("Y", &frame.Rect.top);
+							ImGui::InputInt("Width", &frame.Rect.width);
+							ImGui::InputInt("Height", &frame.Rect.height);
+
+							if (ImGui::Button("Delete")) {
+								RemoveFrame(frame);
+							}
+
+							ImGui::TreePop();
+						}
+					}
+					ImGui::TreePop();
 				}
 			}
 			ImGui::TreePop();

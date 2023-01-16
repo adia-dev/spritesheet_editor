@@ -10,15 +10,17 @@ namespace sse {
 	struct Frame {
 	  public:
 		Frame() = default;
-		Frame(const sf::IntRect& rect, bool isFlipped = false, float duration = 0.2f)
-		    : Rect(rect), IsFlipped(isFlipped), Duration(duration) {}
+		Frame(const sf::IntRect& rect, const std::string& name = "Frame", bool isFlipped = false, float duration = 0.0f)
+		    : Rect(rect), Name(name), IsFlipped(isFlipped), Duration(duration) {}
 		~Frame() = default;
 
 		bool operator==(const Frame& other) const {
-			return Rect == other.Rect && IsFlipped == other.IsFlipped && Duration == other.Duration;
+			return Rect == other.Rect && Name == other.Name && IsFlipped == other.IsFlipped &&
+			       Duration == other.Duration;
 		}
 
 		// Frame data
+		std::string Name;
 		sf::IntRect Rect;
 		bool        IsFlipped;
 		float       Duration;

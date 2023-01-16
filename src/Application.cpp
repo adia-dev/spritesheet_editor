@@ -148,11 +148,11 @@ namespace sse {
 	void Application::Render() {
 		ImGui::PushFont(_imFont);
 		ImGui::DockSpaceOverViewport();
-		ImGui::ShowDemoWindow();
 
 		for (auto &layer : _layers) layer->OnRenderUI();
 
-		Components::ShowBezierDemo();
+		// ImGui::ShowDemoWindow();
+		// Components::ShowBezierDemo();
 
 		// ImGui::PopStyleVar();
 		ImGui::PopFont();

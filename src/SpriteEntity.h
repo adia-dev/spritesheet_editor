@@ -18,6 +18,7 @@ namespace sse {
 		SpriteEntity(sf::Texture& texture);
 		~SpriteEntity() = default;
 
+		void OnAwake() override;
 		void OnUpdate(float dt) override;
 		void OnRender(sf::RenderTarget& target) override;
 		void OnRenderProperties() override;
@@ -28,6 +29,7 @@ namespace sse {
 		sf::Texture& GetTexture();
 		void         SetTexture(const sf::Texture& texture);
 
+		// Frame management
 		std::vector<Frame>& GetFrames();
 		Frame&              GetFrame(int pos);
 		void                SetFrames(const std::vector<Frame>& frames);
@@ -41,6 +43,10 @@ namespace sse {
 		sf::Sprite         _sprite;
 		sf::Texture        _texture;
 		std::vector<Frame> _frames;
+		Frame*             _currentFrame = nullptr;
+
+		// Frame management
+		void OnRenderFrames(sf::RenderTarget& target);
 
 	  public:
 		void Accept(Visitor& v) const override { v.Visit(this); }

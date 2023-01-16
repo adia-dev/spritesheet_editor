@@ -199,7 +199,7 @@ namespace sse {
 		_renderTexture.clear(sf::Color(0, 0, 0));
 
 		_renderTexture.setView(_view);
-		_renderTexture.draw(Application::GetSpriteEntity()->GetSprite());
+		Application::GetSpriteEntity()->OnRender(_renderTexture);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
 
