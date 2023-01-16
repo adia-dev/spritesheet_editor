@@ -66,4 +66,51 @@ namespace sse {
 		_texture = texture;
 		_sprite.setTexture(_texture);
 	}
+
+	std::vector<Frame>& SpriteEntity::GetFrames() {
+		return _frames;
+	}
+
+	Frame& SpriteEntity::GetFrame(int pos) {
+		if (pos < 0 || pos >= _frames.size())
+			throw std::out_of_range("No frame were found at this pos: " + std::to_string(pos));
+
+		return _frames[pos];
+	}
+
+	void SpriteEntity::SetFrames(const std::vector<Frame>& frames) {
+		_frames = frames;
+	}
+
+	void SpriteEntity::AddFrame(const Frame& frame) {
+		_frames.push_back(frame);
+	}
+
+	void SpriteEntity::AddFrame(const Frame& frame, int pos) {
+		if (pos < 0 || pos >= _frames.size())
+			throw std::out_of_range("Cannot add a frame at the position: " + std::to_string(pos));
+
+		_frames.emplace(_frames.begin() + pos, frame);
+	}
+
+	void SpriteEntity::RemoveFrame(int pos) {
+		if (pos < 0 || pos >= _frames.size())
+			throw std::out_of_range("No frame were found at this pos: " + std::to_string(pos));
+
+		_frames.erase(_frames.begin() + pos);
+	}
+
+	void SpriteEntity::RemoveFrame(const Frame& frame) {
+		std::remove_if(_frames.begin(), _frames.end(), [&](const Frame& f) { return f == frame; });
+	}
+
+	void SpriteEntity::SwapFrames(int lhs, int rhs) {
+		if ((lhs < 0 || lhs >= _frames.size()) || (rhs < 0 || rhs >= _frames.size()))
+			throw std::out_of_range("Could not swap the frames because the given positions were incorrect: (" +
+			                        std::to_string(lhs) + ", " + std::to_string(rhs) + ")");
+
+		auto temp    = _frames[lhs];
+		_frames[lhs] = _frames[rhs];
+		_frames[rhs] = temp;
+	}
 } // namespace sse

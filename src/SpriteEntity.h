@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "Frame.h"
 
 #include <filesystem>
 
@@ -27,9 +28,19 @@ namespace sse {
 		sf::Texture& GetTexture();
 		void         SetTexture(const sf::Texture& texture);
 
+		std::vector<Frame>& GetFrames();
+		Frame&              GetFrame(int pos);
+		void                SetFrames(const std::vector<Frame>& frames);
+		void                AddFrame(const Frame& frame);
+		void                AddFrame(const Frame& frame, int pos);
+		void                RemoveFrame(int pos);
+		void                RemoveFrame(const Frame& frame);
+		void                SwapFrames(int lhs, int rhs);
+
 	  private:
-		sf::Sprite  _sprite;
-		sf::Texture _texture;
+		sf::Sprite         _sprite;
+		sf::Texture        _texture;
+		std::vector<Frame> _frames;
 
 	  public:
 		void Accept(Visitor& v) const override { v.Visit(this); }
