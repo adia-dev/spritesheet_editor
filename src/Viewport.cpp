@@ -165,7 +165,10 @@ namespace sse {
 			ImGui::Separator();
 
 			if (ImGui::TreeNode("Sprite")) {
-				ImGui::Image(Application::GetSpriteEntity()->GetSprite(), sf::Vector2f(500, 500));
+				float width  = ImGui::GetContentRegionAvail().x / 2.f;
+				float height = width / Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().x *
+				               Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().y;
+				ImGui::Image(Application::GetSpriteEntity()->GetSprite(), sf::Vector2f(width, height));
 				ImGui::TreePop();
 			}
 
