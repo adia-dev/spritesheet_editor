@@ -40,10 +40,12 @@ namespace sse {
 		void                SwapFrames(int lhs, int rhs);
 
 	  private:
-		sf::Sprite         _sprite;
-		sf::Texture        _texture;
+		sf::Sprite  _sprite;
+		sf::Texture _texture;
+
 		std::vector<Frame> _frames;
-		Frame*             _currentFrame = nullptr;
+		ImColor            _backgroundColor = ImColor(1.f, 1.f, 1.f, 1.f);
+		Frame*             _currentFrame    = nullptr;
 
 		// Frame management
 		void OnRenderFrames(sf::RenderTarget& target);

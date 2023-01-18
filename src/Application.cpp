@@ -240,7 +240,7 @@ namespace sse {
 
 	int Application::InitEntities() {
 		_spriteEntity =
-		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
+		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/broly/1.png"));
 
 		PushEntity(_spriteEntity);
 

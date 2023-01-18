@@ -4,6 +4,7 @@
 #include "SpriteEntity.h"
 
 #include "Application.h"
+#include "ImageHandler.h"
 
 namespace sse {
 
@@ -13,7 +14,9 @@ namespace sse {
 
 	SpriteEntity::SpriteEntity(sf::Sprite& sprite): _sprite(sprite) {
 		const sf::Texture* spriteTex = _sprite.getTexture();
-		if (spriteTex != nullptr) _texture = *spriteTex;
+		if (spriteTex != nullptr) {
+			_texture = *spriteTex;
+		}
 	}
 
 	SpriteEntity::SpriteEntity(sf::Texture& texture): _texture(texture) {
@@ -125,6 +128,25 @@ namespace sse {
 
 							ImGui::TreePop();
 						}
+					}
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
+
+				static bool overwriteTexture = false;
+
+				if (ImGui::TreeNode("Image")) {
+					ImGui::Checkbox("Overwrite Texture", &overwriteTexture);
+					if (ImGui::ColorEdit4("Background Color", (float*)&_backgroundColor)) {
+						sf::Image img =
+						    ImageHandler::ReplaceBackgroundColor(_texture,
+						                                         ImageHandler::ImColorToSFColor(_backgroundColor));
+						if (overwriteTexture) {
+							_texture.loadFromImage(img);
+						}
+
+						_sprite.setTexture(_texture);
 					}
 					ImGui::TreePop();
 				}

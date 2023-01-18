@@ -14,27 +14,32 @@ namespace sse {
 	// ImageManager
 	class ImageHandler {
 	  public:
-		static cv::Mat                  TextureToOpenCVMat(const sf::Texture& texture);
-		static sf::Texture              OpenCVMatToTexture(const cv::Mat& mat);
+		static cv::Mat     TextureToOpenCVMat(const sf::Texture& texture);
+		static sf::Texture OpenCVMatToTexture(const cv::Mat& mat);
+
 		static std::vector<sf::IntRect> SliceFrames(const sf::Texture& texture, const sf::IntRect& roiRect);
-		static sf::Image                ReplaceBackgroundColor(const sf::Image& img,
-		                                                       const sf::Color& colorToReplace = sf::Color::White,
-		                                                       const sf::Color& newColor       = sf::Color::Transparent,
-		                                                       double           threshold      = 1.0);
-		static sf::Image                ReplaceBackgroundColor(const sf::Image& img,
-		                                                       int              x,
-		                                                       int              y,
-		                                                       const sf::Color& newColor  = sf::Color::Transparent,
-		                                                       double           threshold = 1.0);
-		static sf::Image                ReplaceBackgroundColor(sf::Texture&     texture,
-		                                                       const sf::Color& colorToReplace = sf::Color::White,
-		                                                       const sf::Color& newColor       = sf::Color::Transparent,
-		                                                       double           threshold      = 1.0);
-		static sf::Image                ReplaceBackgroundColor(sf::Texture&     texture,
-		                                                       int              x,
-		                                                       int              y,
-		                                                       const sf::Color& newColor  = sf::Color::Transparent,
-		                                                       double           threshold = 1.0);
+
+		static sf::Color ImColorToSFColor(const ImColor& color);
+		static ImColor   SFColorToImColor(const sf::Color& color);
+
+		static sf::Image ReplaceBackgroundColor(const sf::Image& img,
+		                                        const sf::Color& colorToReplace = sf::Color::White,
+		                                        const sf::Color& newColor       = sf::Color::Transparent,
+		                                        double           threshold      = 1.0);
+		static sf::Image ReplaceBackgroundColor(const sf::Image& img,
+		                                        int              x,
+		                                        int              y,
+		                                        const sf::Color& newColor  = sf::Color::Transparent,
+		                                        double           threshold = 1.0);
+		static sf::Image ReplaceBackgroundColor(sf::Texture&     texture,
+		                                        const sf::Color& colorToReplace = sf::Color::White,
+		                                        const sf::Color& newColor       = sf::Color::Transparent,
+		                                        double           threshold      = 1.0);
+		static sf::Image ReplaceBackgroundColor(sf::Texture&     texture,
+		                                        int              x,
+		                                        int              y,
+		                                        const sf::Color& newColor  = sf::Color::Transparent,
+		                                        double           threshold = 1.0);
 
 	  private:
 	};

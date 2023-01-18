@@ -85,6 +85,14 @@ namespace sse {
 		return slices;
 	}
 
+	sf::Color ImageHandler::ImColorToSFColor(const ImColor &color) {
+		return sf::Color(color.Value.x * 255, color.Value.y * 255, color.Value.z * 255, color.Value.w * 255);
+	}
+
+	ImColor ImageHandler::SFColorToImColor(const sf::Color &color) {
+		return ImColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+	}
+
 	sf::Image ImageHandler::ReplaceBackgroundColor(const sf::Image &img,
 	                                               const sf::Color &colorToReplace,
 	                                               const sf::Color &newColor,
