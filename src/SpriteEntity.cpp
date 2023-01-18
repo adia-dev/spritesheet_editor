@@ -9,17 +9,19 @@
 namespace sse {
 
 	SpriteEntity::SpriteEntity(const std::filesystem::path& path) {
-		_texture = AssetManager::GetTexture(path);
+		_texture         = AssetManager::GetTexture(path);
+		_originalTexture = AssetManager::GetTexture(path);
 	}
 
 	SpriteEntity::SpriteEntity(sf::Sprite& sprite): _sprite(sprite) {
 		const sf::Texture* spriteTex = _sprite.getTexture();
 		if (spriteTex != nullptr) {
-			_texture = *spriteTex;
+			_texture         = *spriteTex;
+			_originalTexture = *spriteTex;
 		}
 	}
 
-	SpriteEntity::SpriteEntity(sf::Texture& texture): _texture(texture) {
+	SpriteEntity::SpriteEntity(sf::Texture& texture): _texture(texture), _originalTexture(texture) {
 		_sprite.setTexture(_texture);
 	}
 
@@ -134,18 +136,28 @@ namespace sse {
 
 				ImGui::Separator();
 
-				static bool overwriteTexture = false;
-
 				if (ImGui::TreeNode("Image")) {
-					ImGui::Checkbox("Overwrite Texture", &overwriteTexture);
-					if (ImGui::ColorEdit4("Background Color", (float*)&_backgroundColor)) {
+					ImGui::ColorEdit4("Color To Replace", (float*)&_colorToReplace);
+					ImGui::ColorEdit4("New Color", (float*)&_newColor);
+
+					if (ImGui::Button("Replace")) {
 						sf::Image img =
 						    ImageHandler::ReplaceBackgroundColor(_texture,
-						                                         ImageHandler::ImColorToSFColor(_backgroundColor));
-						if (overwriteTexture) {
-							_texture.loadFromImage(img);
-						}
+						                                         ImageHandler::ImColorToSFColor(_colorToReplace),
+						                                         ImageHandler::ImColorToSFColor(_newColor));
 
+						_texture.loadFromImage(img);
+						_sprite.setTexture(_texture);
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Save")) {
+						sf::Image img = _texture.copyToImage();
+						img.saveToFile("../out/image.png");
+					}
+
+					ImGui::SameLine();
+					if (ImGui::Button("Reset")) {
+						_texture = _originalTexture;
 						_sprite.setTexture(_texture);
 					}
 					ImGui::TreePop();
@@ -163,15 +175,23 @@ namespace sse {
 		_sprite = sprite;
 
 		const sf::Texture* spriteTex = sprite.getTexture();
-		if (spriteTex != nullptr) _texture = *spriteTex;
+		if (spriteTex != nullptr) {
+			_texture         = *spriteTex;
+			_originalTexture = *spriteTex;
+		}
 	}
 
 	sf::Texture& SpriteEntity::GetTexture() {
 		return _texture;
 	}
 
+	sf::Texture& SpriteEntity::GetOriginalTexture() {
+		return _originalTexture;
+	}
+
 	void SpriteEntity::SetTexture(const sf::Texture& texture) {
-		_texture = texture;
+		_texture         = texture;
+		_originalTexture = texture;
 		_sprite.setTexture(_texture);
 	}
 

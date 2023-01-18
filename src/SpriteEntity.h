@@ -27,6 +27,7 @@ namespace sse {
 		void        SetSprite(const sf::Sprite& sprite);
 
 		sf::Texture& GetTexture();
+		sf::Texture& GetOriginalTexture();
 		void         SetTexture(const sf::Texture& texture);
 
 		// Frame management
@@ -42,10 +43,12 @@ namespace sse {
 	  private:
 		sf::Sprite  _sprite;
 		sf::Texture _texture;
+		sf::Texture _originalTexture;
 
 		std::vector<Frame> _frames;
-		ImColor            _backgroundColor = ImColor(1.f, 1.f, 1.f, 1.f);
-		Frame*             _currentFrame    = nullptr;
+		ImColor            _colorToReplace = ImColor(1.f, 1.f, 1.f, 1.f);
+		ImColor            _newColor       = ImColor(1.f, 1.f, 1.f, 1.f);
+		Frame*             _currentFrame   = nullptr;
 
 		// Frame management
 		void OnRenderFrames(sf::RenderTarget& target);
