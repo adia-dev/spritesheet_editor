@@ -47,7 +47,7 @@ namespace sse {
 
 		std::vector<Frame> _frames;
 		ImColor            _colorToReplace = ImColor(1.f, 1.f, 1.f, 1.f);
-		ImColor            _newColor       = ImColor(1.f, 1.f, 1.f, 1.f);
+		ImColor            _newColor       = ImColor(0.f, 0.f, 0.f, 0.f);
 		Frame*             _currentFrame   = nullptr;
 
 		// Frame management

@@ -25,14 +25,7 @@ namespace sse {
 		_sprite.setTexture(_texture);
 	}
 
-	void SpriteEntity::OnAwake() {
-		for (int i = 0; i < 10; ++i) {
-			for (int j = 0; j < 10; ++j) {
-				AddFrame(
-				    Frame(sf::IntRect(i * 32, j * 32, 32, 32), "Frame " + std::to_string(i * 10 + j + 1), false, 0.1f));
-			}
-		}
-	}
+	void SpriteEntity::OnAwake() {}
 
 	void SpriteEntity::OnUpdate(float dt) {}
 
