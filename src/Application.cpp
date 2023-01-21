@@ -3,6 +3,8 @@
 //
 #include "Application.h"
 
+#include "MoveTool.h"
+#include "SelectTool.h"
 #include "components.h"
 
 #include <assert.h>
@@ -185,6 +187,7 @@ namespace sse {
 		if (!instance->InitImGuiSFML()) return -1;
 		if (!instance->InitEntities()) return -1;
 		if (!instance->InitLayers()) return -1;
+		if (!instance->InitTool()) return -1;
 
 		while (instance->_window->isOpen()) {
 			instance->HandleEvents();
@@ -250,6 +253,14 @@ namespace sse {
 	int Application::InitLayers() {
 		PushLayer<Viewport>();
 		PushLayer<Hierarchy>();
+
+		return 1;
+	}
+
+	int Application::InitTool() {
+		// _currentTool = std::make_shared<SelectTool>();
+		_currentTool = std::make_shared<MoveTool>();
+		_currentTool->SetEntity(_spriteEntity);
 
 		return 1;
 	}

@@ -7,6 +7,7 @@
 #include "Hierarchy.h"
 #include "Input.h"
 #include "SpriteEntity.h"
+#include "Tool.h"
 #include "Viewport.h"
 
 namespace sse {
@@ -43,6 +44,9 @@ namespace sse {
 		static std::vector<std::shared_ptr<Entity>> GetEntities() { return GetInstance()->_entities; }
 		static std::shared_ptr<SpriteEntity>        GetSpriteEntity() { return GetInstance()->_spriteEntity; }
 
+		static std::shared_ptr<Tool> GetCurrentTool() { return GetInstance()->_currentTool; }
+		static void                  SetCurrentTool(std::shared_ptr<Tool>& tool) { GetInstance()->_currentTool = tool; }
+
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;
 		void                                       setFancyImguiStyle();
@@ -50,6 +54,7 @@ namespace sse {
 		int InitImGuiSFML();
 		int InitEntities();
 		int InitLayers();
+		int InitTool();
 
 		void HandleEvents();
 		void Update();
@@ -73,6 +78,7 @@ namespace sse {
 		std::vector<std::shared_ptr<Layer>>  _layers;
 		std::vector<std::shared_ptr<Entity>> _entities;
 		std::shared_ptr<SpriteEntity>        _spriteEntity = nullptr;
+		std::shared_ptr<Tool>                _currentTool  = nullptr;
 
 	  public:
 		Application(Application const&)            = delete;

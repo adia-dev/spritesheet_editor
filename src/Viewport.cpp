@@ -26,6 +26,10 @@ namespace sse {
 					_leftMouseButtonPressedStartPos =
 					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
 					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
+
+					if (Application::GetCurrentTool() != nullptr)
+						Application::GetCurrentTool()->OnMouseDown(
+						    sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
 				}
 
 				if (event.mouseButton.button == sf::Mouse::Middle) {
@@ -46,6 +50,9 @@ namespace sse {
 					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _leftMouseButtonPressedStartPos.x,
 					                                     event.mouseMove.y - _leftMouseButtonPressedStartPos.y);
 				}
+
+				if (Application::GetCurrentTool() != nullptr)
+					Application::GetCurrentTool()->OnMouseMove(sf::Vector2f(event.mouseMove.x, event.mouseMove.y));
 			}
 
 			if (event.type == sf::Event::MouseButtonReleased) {
@@ -56,6 +63,9 @@ namespace sse {
 				if (event.mouseButton.button == sf::Mouse::Middle) {
 					_isMiddleMousePressed = false;
 				}
+
+				if (Application::GetCurrentTool() != nullptr)
+					Application::GetCurrentTool()->OnMouseUp(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
 			}
 
 			if (event.type == sf::Event::KeyPressed) {
@@ -91,6 +101,8 @@ namespace sse {
 		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 			currentZoomSpeed = 0.1f;
 		}
+
+		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnUpdate(dt);
 
 		// move the view
 		_desiredViewCenter += Input::GetDirection() * _viewSpeed * dt;
@@ -208,6 +220,8 @@ namespace sse {
 
 		RenderGrid(_renderTexture, _cellSize, sf::Color(100, 100, 100, 50));
 		RenderSelection();
+
+		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
 
 		ImGui::Image(_renderTexture);
 		ImGui::End();
