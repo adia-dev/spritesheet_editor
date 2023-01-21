@@ -14,15 +14,18 @@ namespace sse {
 				break;
 
 			case sf::Event::MouseButtonPressed:
-				instance->_mouseInputs[event.mouseButton.button] = KeyState::PRESSED;
+				instance->_mouseInputs[event.mouseButton.button].state = KeyState::PRESSED;
+				instance->_mouseInputs[event.mouseButton.button].downPosition =
+				    sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
 				break;
 
 			case sf::Event::MouseButtonReleased:
-				instance->_mouseInputs[event.mouseButton.button] = KeyState::RELEASED;
+				instance->_mouseInputs[event.mouseButton.button].state = KeyState::RELEASED;
 				break;
 
 			case sf::Event::MouseMoved:
-				instance->_mousePos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
+				instance->_lastMousePos = instance->_mousePos;
+				instance->_mousePos     = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 				break;
 
 			default:
@@ -43,7 +46,7 @@ namespace sse {
 		auto inputs = GetMouseInputs();
 		auto it     = inputs.find(button);
 
-		if (it != inputs.end()) return it->second == KeyState::PRESSED || it->second == KeyState::DOWN;
+		if (it != inputs.end()) return it->second.state == KeyState::PRESSED || it->second.state == KeyState::DOWN;
 
 		return false;
 	}
