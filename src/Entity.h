@@ -27,6 +27,11 @@ namespace sse {
 
 		virtual bool IsHovered(const sf::Vector2f mousePos) const { return _bounds.contains(mousePos); }
 
+		virtual void Move(const sf::Vector2f delta) { _position += delta; }
+		virtual void Move(const float x, const float y) { _position += {x, y}; }
+
+		virtual void Rotate(const float delta) { _rotation += delta; }
+
 		virtual void SetPosition(const sf::Vector2f position) { _position = position; }
 		virtual void SetScale(const sf::Vector2f scale) { _scale = scale; }
 		virtual void SetRotation(const float rotation) { _rotation = rotation; }
