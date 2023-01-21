@@ -3,8 +3,6 @@
 //
 #include "Application.h"
 
-#include "MoveTool.h"
-#include "SelectTool.h"
 #include "components.h"
 
 #include <assert.h>
@@ -134,7 +132,7 @@ namespace sse {
 
 		float deltaTime = _imIO->DeltaTime;
 
-		_currentTool->OnUpdate(deltaTime);
+		if (_currentTool != nullptr) _currentTool->OnUpdate(deltaTime);
 
 		for (auto entitiy : _entities) {
 			entitiy->OnUpdate(deltaTime);
@@ -259,8 +257,8 @@ namespace sse {
 
 	int Application::InitTool() {
 		// _currentTool = std::make_shared<SelectTool>();
-		_currentTool = std::make_shared<MoveTool>();
-		_currentTool->SetEntity(_spriteEntity);
+		// _currentTool = std::make_shared<MoveTool>();
+		// _currentTool->SetEntity(_spriteEntity);
 
 		return 1;
 	}
