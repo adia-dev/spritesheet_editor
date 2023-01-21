@@ -42,6 +42,7 @@ namespace sse {
 		bool _snapMovement = false;
 		bool _snapZoom     = false;
 		bool _showGrid     = true;
+		bool _showDebug    = false;
 
 		// Events
 		bool          _isLeftMousePressed   = false;
