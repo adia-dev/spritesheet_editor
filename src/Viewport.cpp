@@ -188,6 +188,10 @@ namespace sse {
 				ImGui::Separator();
 
 				if (ImGui::TreeNode("Sprite")) {
+					ImGui::Text("IsHovered: %s",
+					            Application::GetSpriteEntity()->IsHovered(Input::GetViewportMousePosition()) ? "true"
+					                                                                                         : "false");
+
 					float width  = ImGui::GetContentRegionAvail().x / 2.f;
 					float height = width / Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().x *
 					               Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().y;
@@ -227,13 +231,9 @@ namespace sse {
 
 		_renderTexture.setView(_view);
 		Application::GetSpriteEntity()->OnRender(_renderTexture);
-
+		Input::SetViewportMousePosition(
+		    _renderTexture.mapPixelToCoords(sf::Vector2i(_viewMousePos.x, _viewMousePos.y)));
 		_renderTexture.setView(_renderTexture.getDefaultView());
-
-		sf::CircleShape mouseCircle(5);
-		mouseCircle.setFillColor(sf::Color::Red);
-		mouseCircle.setPosition(_viewMousePos);
-		_renderTexture.draw(mouseCircle);
 
 		RenderGrid(_renderTexture, _cellSize, sf::Color(100, 100, 100, 50));
 		RenderSelection();
