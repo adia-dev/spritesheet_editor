@@ -4,6 +4,7 @@
 #include "Application.h"
 
 #include "components.h"
+#include "tools/MoveTool.h"
 
 #include <assert.h>
 
@@ -249,7 +250,8 @@ namespace sse {
 	}
 
 	int Application::InitLayers() {
-		PushLayer<Viewport>();
+		std::shared_ptr<Layer> viewport = std::make_shared<Viewport>(_renderTexture);
+		PushLayer(viewport);
 		PushLayer<Hierarchy>();
 
 		return 1;
@@ -257,8 +259,8 @@ namespace sse {
 
 	int Application::InitTool() {
 		// _currentTool = std::make_shared<SelectTool>();
-		// _currentTool = std::make_shared<MoveTool>();
-		// _currentTool->SetEntity(_spriteEntity);
+		_currentTool = std::make_shared<MoveTool>();
+		_currentTool->SetEntity(_spriteEntity);
 
 		return 1;
 	}

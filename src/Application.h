@@ -9,6 +9,7 @@
 #include "SpriteEntity.h"
 #include "Tool.h"
 #include "Viewport.h"
+#include "utils/Maths.hpp"
 
 namespace sse {
 	// Application
@@ -46,6 +47,21 @@ namespace sse {
 		static std::shared_ptr<Tool> GetCurrentTool() { return GetInstance()->_currentTool; }
 		static void                  SetCurrentTool(std::shared_ptr<Tool>& tool) { GetInstance()->_currentTool = tool; }
 
+		static sf::RenderTexture& GetRenderTexture() { return GetInstance()->_renderTexture; }
+
+		template<typename T>
+		static sf::Vector2f WorldToRenderTexture(sf::Vector2<T> worldPos) {
+			return GetInstance()->_renderTexture.mapPixelToCoords(
+			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
+			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
+		}
+
+		static sf::Vector2f WorldToRenderTexture(ImVec2 worldPos) {
+			return GetInstance()->_renderTexture.mapPixelToCoords(
+			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
+			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
+		}
+
 	  private:
 		inline static std::shared_ptr<Application> _instance = nullptr;
 		void                                       setFancyImguiStyle();
@@ -64,6 +80,7 @@ namespace sse {
 		sf::RenderWindow* _window = nullptr;
 		sf::Clock         _clock;
 		sf::Shader        _shader;
+		sf::RenderTexture _renderTexture;
 
 		// ImGui
 		ImFont*  _imFont = nullptr;
@@ -72,8 +89,6 @@ namespace sse {
 		sf::Text _text;
 
 		// Application variables
-		ImVec2 _mousePos;
-
 		std::vector<std::shared_ptr<Layer>>  _layers;
 		std::vector<std::shared_ptr<Entity>> _entities;
 		std::shared_ptr<SpriteEntity>        _spriteEntity = nullptr;
