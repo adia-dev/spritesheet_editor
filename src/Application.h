@@ -34,7 +34,6 @@ namespace sse {
 		Application();
 		virtual ~Application();
 
-		static ImVec2            GetMousePos() { return GetInstance()->_mousePos; }
 		static ImGuiIO           GetImGuiIO() { return *GetInstance()->_imIO; }
 		static sf::RenderWindow* GetWindow() { return GetInstance()->_window; }
 		static float             GetDeltaTime() { return GetImGuiIO().DeltaTime; }

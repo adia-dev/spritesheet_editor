@@ -12,7 +12,7 @@ namespace sse {
 	}
 
 	void Viewport::OnHandleSFMLEvent(sf::Event& event) {
-		ImVec2 mousePos = Application::GetMousePos();
+		ImVec2 mousePos = Input::GetMousePositionImGui();
 
 		if (_viewportRect.Contains(mousePos)) {
 			if (event.type == sf::Event::MouseWheelScrolled) {
@@ -28,8 +28,9 @@ namespace sse {
 					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 
 					if (Application::GetCurrentTool() != nullptr)
-						Application::GetCurrentTool()->OnMouseDown(
-						    sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+						Application::GetCurrentTool()->OnMouseDown(sf::Vector2f(
+						    event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
+						    event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
 				}
 
 				if (event.mouseButton.button == sf::Mouse::Middle) {
@@ -52,7 +53,9 @@ namespace sse {
 				}
 
 				if (Application::GetCurrentTool() != nullptr)
-					Application::GetCurrentTool()->OnMouseMove(sf::Vector2f(event.mouseMove.x, event.mouseMove.y));
+					Application::GetCurrentTool()->OnMouseMove(
+					    sf::Vector2f(event.mouseMove.x - ImGui::GetStyle().WindowPadding.x,
+					                 event.mouseMove.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
 			}
 
 			if (event.type == sf::Event::MouseButtonReleased) {
@@ -124,11 +127,12 @@ namespace sse {
 
 		_view.setSize(_view.getSize().x * _zoom, _view.getSize().y * _zoom);
 	}
+
 	void Viewport::OnRenderUI() {
 		ImGui::Begin("Viewport", &(this->_visible), ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		RenderOverlay([&](bool& visible, int& location) {
-			ImVec2 mousePos = Application::GetMousePos();
+			ImVec2 mousePos = Input::GetMousePositionImGui();
 			ImGui::Text("Info\n"
 			            "(right-click to change position)");
 			ImGui::Separator();
@@ -198,7 +202,7 @@ namespace sse {
 
 		ImVec2 viewportSize = ImGui::GetWindowSize();
 		ImVec2 viewportPos  = ImGui::GetWindowPos();
-		ImVec2 mousePos     = Application::GetMousePos();
+		ImVec2 mousePos     = Input::GetMousePositionImGui();
 		_viewMousePos =
 		    sf::Vector2f(mousePos.x - viewportPos.x - ImGui::GetStyle().WindowPadding.x,
 		                 mousePos.y - viewportPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
@@ -217,6 +221,11 @@ namespace sse {
 		Application::GetSpriteEntity()->OnRender(_renderTexture);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
+
+		sf::CircleShape mouseCircle(5);
+		mouseCircle.setFillColor(sf::Color::Red);
+		mouseCircle.setPosition(_viewMousePos);
+		_renderTexture.draw(mouseCircle);
 
 		RenderGrid(_renderTexture, _cellSize, sf::Color(100, 100, 100, 50));
 		RenderSelection();

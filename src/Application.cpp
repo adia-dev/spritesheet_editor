@@ -132,9 +132,9 @@ namespace sse {
 	void Application::Update() {
 		if (_window == nullptr) return;
 
-		_mousePos = ImGui::GetIO().MousePos;
-
 		float deltaTime = _imIO->DeltaTime;
+
+		_currentTool->OnUpdate(deltaTime);
 
 		for (auto entitiy : _entities) {
 			entitiy->OnUpdate(deltaTime);

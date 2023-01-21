@@ -25,6 +25,7 @@ namespace sse {
 		static std::map<sf::Keyboard::Key, KeyState>& GetKeyboardInputs() { return GetInstance()->_keyboardInputs; }
 		static std::map<sf::Mouse::Button, KeyState>& GetMouseInputs() { return GetInstance()->_mouseInputs; }
 		static sf::Vector2f&                          GetMousePosition() { return GetInstance()->_mousePos; }
+		static ImVec2 GetMousePositionImGui() { return ImVec2(GetInstance()->_mousePos.x, GetInstance()->_mousePos.y); }
 
 	  private:
 		std::map<sf::Keyboard::Key, KeyState> _keyboardInputs;
