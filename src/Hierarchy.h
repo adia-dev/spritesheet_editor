@@ -13,7 +13,7 @@ namespace sse {
 		~Hierarchy() override = default;
 
 		void OnAttach() override;
-		void OnHandleSFMLEvent(sf::Event& event) override;
+		bool OnHandleSFMLEvent(sf::Event& event) override;
 		void OnUpdate(float dt) override;
 		void OnRenderUI() override;
 	};

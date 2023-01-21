@@ -14,7 +14,7 @@ namespace sse {
 		~Viewport() = default;
 
 		void OnAttach() override;
-		void OnHandleSFMLEvent(sf::Event& event) override;
+		bool OnHandleSFMLEvent(sf::Event& event) override;
 		void OnUpdate(float dt) override;
 		void OnRenderUI() override;
 
@@ -30,6 +30,7 @@ namespace sse {
 		// View
 		sf::View     _view;
 		sf::View     _minimapView;
+		sf::Vector2f _viewportMousePos;
 		sf::Vector2f _viewMousePos;
 		float        _viewSpeed           = 500.f;
 		float        _zoom                = 1.f;
@@ -42,7 +43,7 @@ namespace sse {
 		bool _snapMovement = false;
 		bool _snapZoom     = false;
 		bool _showGrid     = true;
-		bool _showDebug    = false;
+		bool _showDebug    = true;
 
 		// Events
 		bool          _isLeftMousePressed   = false;
@@ -59,10 +60,20 @@ namespace sse {
 			return sf::Vector2<T>(lerp(left.x, right.x, x), lerp(left.y, right.y, x));
 		}
 
+		void RenderViewport();
 		void RenderGrid(sf::RenderTarget& target, float cellSize = 25.f, sf::Color color = sf::Color::White);
 		void RenderSelection();
 
 		template<typename Callback>
 		static void RenderOverlay(Callback&& callback);
+
+		template<typename T>
+		sf::Vector2f WorldToViewport(sf::Vector2<T> worldPos) {
+			return _renderTexture.mapPixelToCoords(sf::Vector2i(worldPos.x, worldPos.y), _view);
+		}
+
+		sf::Vector2f WorldToViewport(ImVec2 worldPos) {
+			return _renderTexture.mapPixelToCoords(sf::Vector2i(worldPos.x, worldPos.y), _view);
+		}
 	};
 } // namespace sse

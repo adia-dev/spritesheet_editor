@@ -26,10 +26,6 @@ namespace sse {
 		static std::map<sf::Mouse::Button, KeyState>& GetMouseInputs() { return GetInstance()->_mouseInputs; }
 		static sf::Vector2f&                          GetMousePosition() { return GetInstance()->_mousePos; }
 		static ImVec2 GetMousePositionImGui() { return ImVec2(GetInstance()->_mousePos.x, GetInstance()->_mousePos.y); }
-		static sf::Vector2f& GetViewportMousePosition() { return GetInstance()->_viewportMousePos; }
-		static ImVec2        GetViewportMousePositionImGui() {
-            return ImVec2(GetInstance()->_viewportMousePos.x, GetInstance()->_viewportMousePos.y);
-		}
 
 		static void SetMousePosition(const sf::Vector2f& mousePos) { GetInstance()->_mousePos = mousePos; }
 		static void SetViewportMousePosition(const sf::Vector2f& mousePos) {

@@ -10,7 +10,9 @@ namespace sse {
 
 	void Hierarchy::OnAttach() {}
 
-	void Hierarchy::OnHandleSFMLEvent(sf::Event& event) {}
+	bool Hierarchy::OnHandleSFMLEvent(sf::Event& event) {
+		return false;
+	}
 
 	void Hierarchy::OnUpdate(float dt) {}
 

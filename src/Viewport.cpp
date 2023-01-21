@@ -11,127 +11,31 @@ namespace sse {
 		_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 	}
 
-	void Viewport::OnHandleSFMLEvent(sf::Event& event) {
-		ImVec2 mousePos = Input::GetMousePositionImGui();
+	bool Viewport::OnHandleSFMLEvent(sf::Event& event) {
+		if (!_viewportRect.Contains(Input::GetMousePositionImGui())) return false;
 
-		if (_viewportRect.Contains(mousePos)) {
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Tab) {
-					_showDebug = !_showDebug;
-				}
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::G) {
+				_showGrid = !_showGrid;
+				return true;
 			}
 
-			if (event.type == sf::Event::MouseWheelScrolled) {
-				_targetZoom =
-				    std::max(0.1f, std::min(10.f, _targetZoom + event.mouseWheelScroll.delta * _zoomDeltaMultiplier));
-			}
-
-			if (event.type == sf::Event::MouseButtonPressed) {
-				if (event.mouseButton.button == sf::Mouse::Left) {
-					_isLeftMousePressed = true;
-					_leftMouseButtonPressedStartPos =
-					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
-					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
-
-					if (Application::GetCurrentTool() != nullptr)
-						Application::GetCurrentTool()->OnMouseDown(sf::Vector2f(
-						    event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
-						    event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
-				}
-
-				if (event.mouseButton.button == sf::Mouse::Middle) {
-					_isMiddleMousePressed = true;
-					_middleMouseButtonPressedStartPos =
-					    sf::Vector2f(event.mouseButton.x - ImGui::GetStyle().WindowPadding.x,
-					                 event.mouseButton.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
-				}
-			}
-
-			if (event.type == sf::Event::MouseMoved) {
-				if (_isMiddleMousePressed) {
-					_desiredViewCenter =
-					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _middleMouseButtonPressedStartPos.x,
-					                                     event.mouseMove.y - _middleMouseButtonPressedStartPos.y);
-				} else if (_isLeftMousePressed && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					_desiredViewCenter =
-					    _view.getCenter() - sf::Vector2f(event.mouseMove.x - _leftMouseButtonPressedStartPos.x,
-					                                     event.mouseMove.y - _leftMouseButtonPressedStartPos.y);
-				}
-
-				if (Application::GetCurrentTool() != nullptr)
-					Application::GetCurrentTool()->OnMouseMove(
-					    sf::Vector2f(event.mouseMove.x - ImGui::GetStyle().WindowPadding.x,
-					                 event.mouseMove.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
-			}
-
-			if (event.type == sf::Event::MouseButtonReleased) {
-				if (event.mouseButton.button == sf::Mouse::Left) {
-					_isLeftMousePressed = false;
-				}
-
-				if (event.mouseButton.button == sf::Mouse::Middle) {
-					_isMiddleMousePressed = false;
-				}
-
-				if (Application::GetCurrentTool() != nullptr)
-					Application::GetCurrentTool()->OnMouseUp(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
-			}
-
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::F1 || event.key.code == sf::Keyboard::Up) {
-					// _cellSize = std::min(100.f, _cellSize + 5.f);
-				}
-				if (event.key.code == sf::Keyboard::F2 || event.key.code == sf::Keyboard::Down) {
-					// _cellSize = std::max(5.f, _cellSize - 5.f);
-				}
-			}
-		} else {
-			if (event.type == sf::Event::MouseButtonPressed) {
-				if (event.mouseButton.button == sf::Mouse::Left) {
-					_isLeftMousePressed = false;
-				}
-			}
-
-			if (event.type == sf::Event::MouseButtonReleased) {
-				if (event.mouseButton.button == sf::Mouse::Left) {
-					_isLeftMousePressed = false;
-				}
+			if (event.key.code == sf::Keyboard::D) {
+				_showDebug = !_showDebug;
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	void Viewport::OnUpdate(float dt) {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
+		_viewportMousePos =
+		    sf::Vector2f(Input::GetMousePosition().x - ImGui::GetStyle().WindowPadding.x,
+		                 Input::GetMousePosition().y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 
-		float currentZoomSpeed = _zoomSpeed;
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-			currentZoomSpeed *= 2.f;
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-			currentZoomSpeed = 0.1f;
-		}
-
-		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnUpdate(dt);
-
-		// move the view
-		_desiredViewCenter += Input::GetDirection() * _viewSpeed * dt;
-
-		// zoom the view
-		if (Input::IsKeyDown(sf::Keyboard::LBracket)) {
-			_targetZoom =
-			    std::max(0.1f, std::min(10.f, lerp(_zoom, _targetZoom, currentZoomSpeed * dt) - _zoomDeltaMultiplier));
-		}
-		if (Input::IsKeyDown(sf::Keyboard::RBracket)) {
-			_targetZoom =
-			    std::max(0.1f, std::min(10.f, lerp(_zoom, _targetZoom, currentZoomSpeed * dt) + _zoomDeltaMultiplier));
-		}
-
-		_zoom = lerp(_zoom, _targetZoom, currentZoomSpeed * dt);
-
-		_view.setCenter(lerp(_view.getCenter().x, _desiredViewCenter.x, currentZoomSpeed * dt),
-		                lerp(_view.getCenter().y, _desiredViewCenter.y, currentZoomSpeed * dt));
-
-		_view.setSize(_view.getSize().x * _zoom, _view.getSize().y * _zoom);
+		_viewMousePos = WorldToViewport(_viewportMousePos);
 	}
 
 	void Viewport::OnRenderUI() {
@@ -188,10 +92,6 @@ namespace sse {
 				ImGui::Separator();
 
 				if (ImGui::TreeNode("Sprite")) {
-					ImGui::Text("IsHovered: %s",
-					            Application::GetSpriteEntity()->IsHovered(Input::GetViewportMousePosition()) ? "true"
-					                                                                                         : "false");
-
 					float width  = ImGui::GetContentRegionAvail().x / 2.f;
 					float height = width / Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().x *
 					               Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().y;
@@ -212,47 +112,34 @@ namespace sse {
 			});
 		}
 
-		ImVec2 viewportSize = ImGui::GetWindowSize();
-		ImVec2 viewportPos  = ImGui::GetWindowPos();
-		ImVec2 mousePos     = Input::GetMousePositionImGui();
-		_viewMousePos =
-		    sf::Vector2f(mousePos.x - viewportPos.x - ImGui::GetStyle().WindowPadding.x,
-		                 mousePos.y - viewportPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
-		// _viewMousePos -= _view.getCenter();
-
-		_viewportRect =
-		    ImRect(viewportPos,
-		           {viewportPos.x + viewportSize.x, viewportPos.y + viewportSize.y + ImGui::GetFrameHeight()});
-
-		_view.setSize(viewportSize.x * _zoom, viewportSize.y * _zoom);
-
-		_renderTexture.create(viewportSize.x, viewportSize.y);
-		_renderTexture.clear(sf::Color(0, 0, 0));
-
-		_renderTexture.setView(_view);
-		Application::GetSpriteEntity()->OnRender(_renderTexture);
-		Input::SetViewportMousePosition(
-		    _renderTexture.mapPixelToCoords(sf::Vector2i(_viewMousePos.x, _viewMousePos.y)));
-		_renderTexture.setView(_renderTexture.getDefaultView());
-
-		RenderGrid(_renderTexture, _cellSize, sf::Color(100, 100, 100, 50));
-		RenderSelection();
-
-		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
-
-		ImGui::Image(_renderTexture);
+		RenderViewport();
 		ImGui::End();
 	}
 
-	float Viewport::smoothstep(float edge0, float edge1, float x) {
-		// Scale, and clamp x to 0..1 range
-		x = std::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-		// Evaluate polynomial
-		return x * x * (3 - 2 * x);
-	}
+	void Viewport::RenderViewport() {
+		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		_viewportRect       = ImRect(
+            ImGui::GetCursorScreenPos(),
+            ImVec2(ImGui::GetCursorScreenPos().x + viewportSize.x, ImGui::GetCursorScreenPos().y + viewportSize.y));
+		_view.setSize(viewportSize.x, viewportSize.y);
 
-	float Viewport::lerp(float left, float right, float x) {
-		return left + x * (right - left);
+		_renderTexture.clear(sf::Color::Transparent);
+		_renderTexture.create(viewportSize.x, viewportSize.y);
+		RenderGrid(_renderTexture, 32.f, sf::Color(255, 255, 255, 50));
+
+		_renderTexture.setView(_view);
+
+		Application::GetSpriteEntity()->OnRender(_renderTexture);
+
+		sf::CircleShape circle(10.f);
+		circle.setFillColor(sf::Color::Red);
+		circle.setOrigin(10.f, 10.f);
+		circle.setPosition(_viewMousePos);
+		_renderTexture.draw(circle);
+
+		_renderTexture.setView(_renderTexture.getDefaultView());
+
+		ImGui::Image(_renderTexture);
 	}
 
 	void Viewport::RenderGrid(sf::RenderTarget& target, float cellSize, sf::Color color) {
@@ -268,12 +155,12 @@ namespace sse {
 			for (int j = 0; j < target.getSize().y / cellSize; j++) {
 				grid.setPosition(i * cellSize, j * cellSize);
 
-				// if (grid.getGlobalBounds().contains(_viewMousePos))
-				// 	grid.setOutlineColor(sf::Color::Red);
-				// else {
-				// 	grid.setOutlineColor(color);
-				// 	grid.setFillColor(sf::Color::Transparent);
-				// }
+				if (grid.getGlobalBounds().contains(_viewportMousePos))
+					grid.setOutlineColor(sf::Color::Red);
+				else {
+					grid.setOutlineColor(color);
+					grid.setFillColor(sf::Color::Transparent);
+				}
 
 				target.draw(grid);
 			}
@@ -294,6 +181,17 @@ namespace sse {
 
 			_renderTexture.draw(rect);
 		}
+	}
+
+	float Viewport::smoothstep(float edge0, float edge1, float x) {
+		// Scale, and clamp x to 0..1 range
+		x = std::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+		// Evaluate polynomial
+		return x * x * (3 - 2 * x);
+	}
+
+	float Viewport::lerp(float left, float right, float x) {
+		return left + x * (right - left);
 	}
 
 	template<typename Callback>

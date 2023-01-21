@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include "Input.h"
 #include "SpriteEntity.h"
 #include "constants.h"
 
@@ -21,6 +22,7 @@ namespace sse {
 		virtual void OnMouseUp(const sf::Vector2f mousePos) {
 			_mouseUpPos  = mousePos;
 			_isMouseDown = false;
+			_canInteract = false;
 		}
 		virtual void OnMouseMove(const sf::Vector2f mousePos) {
 			_lastMousePos = _mousePos;
@@ -37,5 +39,6 @@ namespace sse {
 		sf::Vector2f                  _mousePos, _mouseDownPos, _mouseUpPos;
 		sf::Vector2f                  _lastMousePos, _mouseDelta;
 		bool                          _isMouseDown = false;
+		bool                          _canInteract = false;
 	};
 } // namespace sse

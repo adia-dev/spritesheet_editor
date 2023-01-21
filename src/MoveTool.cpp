@@ -1,4 +1,3 @@
-#include "MoveTool.h"
 //
 // Created by abdoulayedia on 21.01.2023
 //
@@ -12,6 +11,7 @@ namespace sse {
 		ImGui::GetIO().MouseDrawCursor = true;
 		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 	}
+
 	void MoveTool::OnMouseUp(const sf::Vector2f mousePos) {
 		Tool::OnMouseUp(mousePos);
 
@@ -27,10 +27,6 @@ namespace sse {
 
 	void MoveTool::OnUpdate(float dt) {
 		if (_entity == nullptr) return;
-
-		if (_isMouseDown) {
-			_entity->GetSprite().move(_mouseDelta);
-		}
 	}
 
 } // namespace sse

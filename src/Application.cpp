@@ -124,7 +124,7 @@ namespace sse {
 			}
 
 			for (auto &layer : _layers) {
-				layer->OnHandleSFMLEvent(event);
+				if (layer->OnHandleSFMLEvent(event)) break;
 			}
 		}
 	}

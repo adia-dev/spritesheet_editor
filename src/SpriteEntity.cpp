@@ -37,17 +37,6 @@ namespace sse {
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {
 		target.draw(_sprite);
 		OnRenderFrames(target);
-
-		// Draw bounds
-		if (IsHovered(Input::GetViewportMousePosition())) {
-			sf::RectangleShape rect;
-			rect.setPosition(_bounds.left, _bounds.top);
-			rect.setSize(sf::Vector2f(_bounds.width, _bounds.height));
-			rect.setFillColor(sf::Color(120, 0, 0, 100));
-			rect.setOutlineColor(sf::Color::Blue);
-			rect.setOutlineThickness(1.f);
-			target.draw(rect);
-		}
 	}
 
 	void SpriteEntity::OnRenderFrames(sf::RenderTarget& target) {
