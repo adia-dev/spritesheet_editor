@@ -10,7 +10,8 @@ namespace sse {
 	// Viewport
 	class Viewport: public Layer {
 	  public:
-		Viewport()  = default;
+		// Viewport() = default;
+		Viewport(sf::RenderTexture& renderTexture): _renderTexture(renderTexture) {}
 		~Viewport() = default;
 
 		void OnAttach() override;
@@ -23,9 +24,9 @@ namespace sse {
 		ImRect _viewportRect;
 
 		// Rendering
-		sf::RenderTexture _renderTexture;
-		sf::Texture       _texture;
-		float             _cellSize = 25.f;
+		sf::RenderTexture& _renderTexture;
+		sf::Texture        _texture;
+		float              _cellSize = 25.f;
 
 		// View
 		sf::View     _view;
@@ -62,14 +63,5 @@ namespace sse {
 
 		template<typename Callback>
 		static void RenderOverlay(Callback&& callback);
-
-		template<typename T>
-		sf::Vector2f WorldToViewport(sf::Vector2<T> worldPos) {
-			return _renderTexture.mapPixelToCoords(sf::Vector2i(worldPos.x, worldPos.y), _view);
-		}
-
-		sf::Vector2f WorldToViewport(ImVec2 worldPos) {
-			return _renderTexture.mapPixelToCoords(sf::Vector2i(worldPos.x, worldPos.y), _view);
-		}
 	};
 } // namespace sse

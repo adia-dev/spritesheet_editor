@@ -31,11 +31,8 @@ namespace sse {
 
 	void Viewport::OnUpdate(float dt) {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
-		_viewportMousePos =
-		    sf::Vector2f(Input::GetMousePosition().x - ImGui::GetStyle().WindowPadding.x,
-		                 Input::GetMousePosition().y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight());
 
-		_viewMousePos = WorldToViewport(_viewportMousePos);
+		_viewMousePos = Application::WorldToRenderTexture(Input::GetMousePosition());
 	}
 
 	void Viewport::OnRenderUI() {
@@ -136,6 +133,8 @@ namespace sse {
 		circle.setOrigin(10.f, 10.f);
 		circle.setPosition(_viewMousePos);
 		_renderTexture.draw(circle);
+
+		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
 
 		_renderTexture.setView(_renderTexture.getDefaultView());
 
