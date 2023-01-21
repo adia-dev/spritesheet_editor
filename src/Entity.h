@@ -43,6 +43,9 @@ namespace sse {
 		virtual void          SetBounds(const sf::FloatRect bounds) { _bounds = bounds; }
 		virtual sf::FloatRect GetBounds() const { return _bounds; }
 
+		virtual float GetWidth() const { return _bounds.width; }
+		virtual float GetHeight() const { return _bounds.height; }
+
 	  protected:
 		sf::Vector2f  _position;
 		sf::Vector2f  _scale = {1.f, 1.f};
