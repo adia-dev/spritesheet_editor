@@ -29,6 +29,9 @@ namespace sse {
 
 	void SpriteEntity::OnUpdate(float dt) {
 		_bounds = _sprite.getGlobalBounds();
+		_sprite.setPosition(_position);
+		_sprite.setScale(_scale);
+		_sprite.setRotation(_rotation);
 	}
 
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {
@@ -83,27 +86,34 @@ namespace sse {
 		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		if (ImGui::TreeNode("Sprite Entity")) {
 			{
-				ImVec2 position(_sprite.getPosition().x, _sprite.getPosition().y);
-				float  scale = _sprite.getScale().x;
+				ImVec2 position(_position.x, _position.y);
+				float  scale    = _scale.x;
+				float  rotation = _sprite.getRotation();
 
 				if (ImGui::SliderFloat("X", &position.x, -1000.f, 1000.f)) {
-					_sprite.setPosition(position.x, _sprite.getPosition().y);
+					_position.x = position.x;
 				}
 				if (ImGui::SliderFloat("Y", &position.y, -1000.f, 1000.f)) {
-					_sprite.setPosition(_sprite.getPosition().x, position.y);
+					_position.y = position.y;
 				}
 
 				ImGui::Separator();
 
 				if (ImGui::SliderFloat("Scale", &scale, -1.f, 10.f)) {
-					_sprite.setScale(scale, scale);
+					_scale = sf::Vector2f(scale, scale);
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::SliderFloat("Rotation", &rotation, -360.f, 360.f)) {
+					_rotation = rotation;
 				}
 
 				ImGui::Separator();
 
 				if (ImGui::Button("Reset")) {
-					_sprite.setPosition(0.f, 0.f);
-					_sprite.setScale(1.f, 1.f);
+					_scale    = sf::Vector2f(1.f, 1.f);
+					_position = sf::Vector2f(0.f, 0.f);
 				}
 
 				ImGui::Separator();

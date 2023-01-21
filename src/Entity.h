@@ -40,7 +40,7 @@ namespace sse {
 
 	  protected:
 		sf::Vector2f  _position;
-		sf::Vector2f  _scale;
+		sf::Vector2f  _scale = {1.f, 1.f};
 		float         _rotation;
 		sf::FloatRect _bounds;
 	};
