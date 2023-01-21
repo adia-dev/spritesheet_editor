@@ -29,16 +29,16 @@ namespace sse {
 
 		// View
 		sf::View     _view;
-		sf::View     _minimapView;
 		sf::Vector2f _viewportMousePos;
 		sf::Vector2f _viewMousePos;
-		float        _viewSpeed           = 500.f;
-		float        _zoom                = 1.f;
-		float        _targetZoom          = 1.f;
-		float        _zoomSpeed           = 2.f;
-		float        _zoomDeltaMultiplier = 0.5f;
-
 		sf::Vector2f _desiredViewCenter = {-1.f, -1.f};
+
+		// Camera movement and zoom
+		float _viewSpeed           = 500.f;
+		float _zoom                = 1.f;
+		float _targetZoom          = 1.f;
+		float _zoomSpeed           = 2.f;
+		float _zoomDeltaMultiplier = 0.5f;
 
 		bool _snapMovement = false;
 		bool _snapZoom     = false;
@@ -46,10 +46,6 @@ namespace sse {
 		bool _showDebug    = true;
 
 		// Events
-		bool          _isLeftMousePressed   = false;
-		bool          _isMiddleMousePressed = false;
-		sf::Vector2f  _leftMouseButtonPressedStartPos;
-		sf::Vector2f  _middleMouseButtonPressedStartPos;
 		sf::FloatRect _selectionRect;
 
 		float smoothstep(float edge0, float edge1, float x);

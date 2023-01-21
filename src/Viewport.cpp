@@ -52,17 +52,17 @@ namespace sse {
 				else
 					ImGui::Text("Mouse Position: <invalid>");
 
-				if (_isLeftMousePressed)
-					ImGui::Text("Left Mouse Button Pressed: (%.1f, %.1f)",
-					            _leftMouseButtonPressedStartPos.x,
-					            _leftMouseButtonPressedStartPos.y);
+				if (Input::IsMouseButtonDown(sf::Mouse::Left))
+					ImGui::Text("Left Mouse Button Pressed At: (%.1f, %.1f)",
+					            Input::GetMouseDownPosition(sf::Mouse::Left).x,
+					            Input::GetMouseDownPosition(sf::Mouse::Left).y);
 				else
 					ImGui::Text("Left Mouse Button Pressed: <not pressed>");
 
-				if (_isMiddleMousePressed)
-					ImGui::Text("Middle Mouse Button Pressed: (%.1f, %.1f)",
-					            _middleMouseButtonPressedStartPos.x,
-					            _middleMouseButtonPressedStartPos.y);
+				if (Input::IsMouseButtonDown(sf::Mouse::Middle))
+					ImGui::Text("Middle Mouse Button Pressed At: (%.1f, %.1f)",
+					            Input::GetMouseDownPosition(sf::Mouse::Middle).x,
+					            Input::GetMouseDownPosition(sf::Mouse::Middle).y);
 				else
 					ImGui::Text("Middle Mouse Button Pressed: <not pressed>");
 
@@ -167,21 +167,7 @@ namespace sse {
 		}
 	}
 
-	void Viewport::RenderSelection() {
-		if (_isLeftMousePressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-			_selectionRect =
-			    sf::FloatRect(_leftMouseButtonPressedStartPos, _viewMousePos - _leftMouseButtonPressedStartPos);
-
-			sf::RectangleShape rect;
-			rect.setPosition(_leftMouseButtonPressedStartPos);
-			rect.setSize(sf::Vector2f(_selectionRect.width, _selectionRect.height));
-			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Blue);
-			rect.setOutlineThickness(2.f);
-
-			_renderTexture.draw(rect);
-		}
-	}
+	void Viewport::RenderSelection() {}
 
 	float Viewport::smoothstep(float edge0, float edge1, float x) {
 		// Scale, and clamp x to 0..1 range
