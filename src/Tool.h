@@ -15,20 +15,21 @@ namespace sse {
 		Tool(std::shared_ptr<SpriteEntity>& entity) { _entity = entity; }
 		virtual ~Tool() = default;
 
-		virtual void OnMouseDown(const sf::Vector2f mousePos) {
-			_mouseDownPos = mousePos;
-			_isMouseDown  = true;
-		}
-		virtual void OnMouseUp(const sf::Vector2f mousePos) {
-			_mouseUpPos  = mousePos;
-			_isMouseDown = false;
-			_canInteract = false;
-		}
-		virtual void OnMouseMove(const sf::Vector2f mousePos) {
-			_lastMousePos = _mousePos;
-			_mousePos     = mousePos;
-			_mouseDelta   = _mousePos - _lastMousePos;
-		}
+		virtual bool HandleSFMLEvent(sf::Event& event);
+
+		virtual void OnMouseDown() {}
+		virtual void OnMouseUp() {}
+		virtual void OnMouseMove() {}
+		virtual void OnMouseLeave() {}
+		virtual void OnMouseEnter() {}
+
+		virtual void OnMouseButtonUp(sf::Mouse::Button button) {}
+		virtual void OnMouseButtonDown(sf::Mouse::Button button) {}
+		virtual void OnMouseWheelScroll(sf::Event::MouseWheelScrollEvent& event) {}
+
+		virtual void OnKeyDown(sf::Keyboard::Key key) {}
+		virtual void OnKeyUp(sf::Keyboard::Key key) {}
+
 		virtual void OnRender(sf::RenderTarget& target) = 0;
 		virtual void OnUpdate(float dt) {}
 
@@ -36,9 +37,6 @@ namespace sse {
 
 	  protected:
 		std::shared_ptr<SpriteEntity> _entity;
-		sf::Vector2f                  _mousePos, _mouseDownPos, _mouseUpPos;
-		sf::Vector2f                  _lastMousePos, _mouseDelta;
-		bool                          _isMouseDown = false;
 		bool                          _canInteract = false;
 	};
 } // namespace sse
