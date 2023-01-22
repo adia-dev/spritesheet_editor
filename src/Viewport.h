@@ -58,6 +58,7 @@ namespace sse {
 		}
 
 		void RenderViewport();
+		void RenderDebug();
 		void RenderGrid(sf::RenderTarget& target, float cellSize = 25.f, sf::Color color = sf::Color::White);
 		void RenderSelection();
 

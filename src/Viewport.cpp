@@ -43,76 +43,7 @@ namespace sse {
 	void Viewport::OnRenderUI() {
 		ImGui::Begin("Viewport", &(this->_visible), ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-		if (_showDebug) {
-			RenderOverlay([&](bool& visible, int& location) {
-				ImVec2 mousePos = Input::GetMousePositionImGui();
-				ImGui::Text("Info\n"
-				            "(right-click to change position)");
-				ImGui::Separator();
-				if (ImGui::IsMousePosValid())
-					ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
-				else
-					ImGui::Text("Mouse Position: <invalid>");
-
-				if (Input::IsMouseButtonDown(sf::Mouse::Left))
-					ImGui::Text("Left Mouse Button Pressed At: (%.1f, %.1f)",
-					            Input::GetMouseDownPosition(sf::Mouse::Left).x,
-					            Input::GetMouseDownPosition(sf::Mouse::Left).y);
-				else
-					ImGui::Text("Left Mouse Button Pressed: <not pressed>");
-
-				if (Input::IsMouseButtonDown(sf::Mouse::Middle))
-					ImGui::Text("Middle Mouse Button Pressed At: (%.1f, %.1f)",
-					            Input::GetMouseDownPosition(sf::Mouse::Middle).x,
-					            Input::GetMouseDownPosition(sf::Mouse::Middle).y);
-				else
-					ImGui::Text("Middle Mouse Button Pressed: <not pressed>");
-
-				ImGui::Separator();
-
-				ImGui::Text("Viewport Pos: (%.1f, %.1f)", _viewportRect.Min.x, _viewportRect.Min.y);
-				ImGui::Text("Viewport Size: (%.1f, %.1f)", _viewportRect.Max.x, _viewportRect.Max.y);
-
-				ImGui::Separator();
-
-				ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
-				ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
-				ImGui::Text("View Zoom: %.1f", _zoom);
-
-				ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
-				ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
-				ImGui::Checkbox("Show Grid: ", &(this->_showGrid));
-
-				ImGui::Separator();
-
-				ImGui::Text("Selection Rectangle: (x: %.1f, y: %.1f, w: %.1f, h: %.1f)\n\n",
-				            _selectionRect.left,
-				            _selectionRect.top,
-				            _selectionRect.width,
-				            _selectionRect.height);
-
-				ImGui::Separator();
-
-				if (ImGui::TreeNode("Sprite")) {
-					float width  = ImGui::GetContentRegionAvail().x / 2.f;
-					float height = width / Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().x *
-					               Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().y;
-					ImGui::Image(Application::GetSpriteEntity()->GetSprite(), sf::Vector2f(width, height));
-					ImGui::TreePop();
-				}
-
-				if (ImGui::BeginPopupContextWindow()) {
-					if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
-					if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
-					if (ImGui::MenuItem("Top-left", NULL, location == 0)) location = 0;
-					if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
-					if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
-					if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
-					if (ImGui::MenuItem("Close")) visible = false;
-					ImGui::EndPopup();
-				}
-			});
-		}
+		if (_showDebug) RenderDebug();
 
 		RenderViewport();
 		ImGui::End();
@@ -147,6 +78,77 @@ namespace sse {
 		// _renderTexture.setView(_renderTexture.getDefaultView());
 
 		ImGui::Image(_renderTexture);
+	}
+
+	void Viewport::RenderDebug() {
+		RenderOverlay([&](bool& visible, int& location) {
+			ImVec2 mousePos = Input::GetMousePositionImGui();
+			ImGui::Text("Info\n"
+			            "(right-click to change position)");
+			ImGui::Separator();
+			if (ImGui::IsMousePosValid())
+				ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
+			else
+				ImGui::Text("Mouse Position: <invalid>");
+
+			if (Input::IsMouseButtonDown(sf::Mouse::Left))
+				ImGui::Text("Left Mouse Button Pressed At: (%.1f, %.1f)",
+				            Input::GetMouseDownPosition(sf::Mouse::Left).x,
+				            Input::GetMouseDownPosition(sf::Mouse::Left).y);
+			else
+				ImGui::Text("Left Mouse Button Pressed: <not pressed>");
+
+			if (Input::IsMouseButtonDown(sf::Mouse::Middle))
+				ImGui::Text("Middle Mouse Button Pressed At: (%.1f, %.1f)",
+				            Input::GetMouseDownPosition(sf::Mouse::Middle).x,
+				            Input::GetMouseDownPosition(sf::Mouse::Middle).y);
+			else
+				ImGui::Text("Middle Mouse Button Pressed: <not pressed>");
+
+			ImGui::Separator();
+
+			ImGui::Text("Viewport Pos: (%.1f, %.1f)", _viewportRect.Min.x, _viewportRect.Min.y);
+			ImGui::Text("Viewport Size: (%.1f, %.1f)", _viewportRect.Max.x, _viewportRect.Max.y);
+
+			ImGui::Separator();
+
+			ImGui::Text("View Center: (%.1f, %.1f)", _view.getCenter().x, _view.getCenter().y);
+			ImGui::Text("View Size: (%.1f, %.1f)", _view.getSize().x, _view.getSize().y);
+			ImGui::Text("View Zoom: %.1f", _zoom);
+
+			ImGui::Checkbox("Snap Zoom: ", &(this->_snapZoom));
+			ImGui::Checkbox("Snap Movement: ", &(this->_snapMovement));
+			ImGui::Checkbox("Show Grid: ", &(this->_showGrid));
+
+			ImGui::Separator();
+
+			ImGui::Text("Selection Rectangle: (x: %.1f, y: %.1f, w: %.1f, h: %.1f)\n\n",
+			            _selectionRect.left,
+			            _selectionRect.top,
+			            _selectionRect.width,
+			            _selectionRect.height);
+
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Sprite")) {
+				float width  = ImGui::GetContentRegionAvail().x / 2.f;
+				float height = width / Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().x *
+				               Application::GetSpriteEntity()->GetSprite().getTexture()->getSize().y;
+				ImGui::Image(Application::GetSpriteEntity()->GetSprite(), sf::Vector2f(width, height));
+				ImGui::TreePop();
+			}
+
+			if (ImGui::BeginPopupContextWindow()) {
+				if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
+				if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
+				if (ImGui::MenuItem("Top-left", NULL, location == 0)) location = 0;
+				if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
+				if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
+				if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
+				if (ImGui::MenuItem("Close")) visible = false;
+				ImGui::EndPopup();
+			}
+		});
 	}
 
 	void Viewport::RenderGrid(sf::RenderTarget& target, float cellSize, sf::Color color) {
