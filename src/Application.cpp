@@ -112,6 +112,10 @@ namespace sse {
 			ImGui::SFML::ProcessEvent(event);
 			Input::HandleEvents(event);
 
+			for (auto &layer : _layers) {
+				if (layer->OnHandleSFMLEvent(event)) break;
+			}
+
 			if (event.type == sf::Event::Closed) {
 				_window->close();
 			}
@@ -120,10 +124,6 @@ namespace sse {
 				if (event.key.code == sf::Keyboard::Escape) {
 					_window->close();
 				}
-			}
-
-			for (auto &layer : _layers) {
-				if (layer->OnHandleSFMLEvent(event)) break;
 			}
 		}
 	}

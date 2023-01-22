@@ -18,7 +18,9 @@ namespace sse {
 			auto& instance = GetInstance();
 			auto& texMap   = instance._textures;
 			auto  find     = texMap.find(id);
-			if (find != texMap.end()) return find->second;
+			if (find != texMap.end()) {
+				return find->second;
+			}
 
 			sf::Texture newTexture;
 			newTexture.loadFromFile(id);

@@ -32,7 +32,12 @@ namespace sse {
 	void Viewport::OnUpdate(float dt) {
 		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
 
+		_renderTexture.setView(_view);
 		_viewMousePos = Application::WorldToRenderTexture(Input::GetMousePosition());
+		_renderTexture.setView(_renderTexture.getDefaultView());
+		_viewportMousePos =
+		    Input::GetMousePosition() - sf::Vector2f(ImGui::GetStyle().WindowPadding.x,
+		                                             ImGui::GetStyle().WindowPadding.y + ImGui::GetFrameHeight());
 	}
 
 	void Viewport::OnRenderUI() {
