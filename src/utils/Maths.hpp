@@ -70,5 +70,10 @@ namespace sse {
 		static sf::Vector2<T> Normalize(sf::Vector2<T> vector) {
 			return sf::Vector2<T>(vector.x / Magnitude(vector), vector.y / Magnitude(vector));
 		}
+
+		template<typename T>
+		static sf::Rect<T> ImRectToSFRect(const ImRect& rect) {
+			return sf::Rect<T>(rect.Min.x, rect.Min.y, rect.Max.x - rect.Min.x, rect.Max.y - rect.Min.y);
+		}
 	};
 } // namespace sse

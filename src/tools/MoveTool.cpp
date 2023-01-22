@@ -42,7 +42,7 @@ namespace sse {
 	}
 
 	void MoveTool::OnUpdate(float dt) {
-		if (_entity == nullptr) return;
+		if (_entity == nullptr || !_workspaceRect.contains(Input::GetMousePosition())) return;
 
 		float targetSpeed = Maths::Magnitude(Input::GetDirection()) * _speed;
 
@@ -52,7 +52,7 @@ namespace sse {
 
 		if (_entity->IsHovered(Application::WorldToRenderTexture(Input::GetMousePosition()))) {
 			if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
-				_entity->Move(Input::GetMouseDelta());
+				_entity->Move(Input::GetMouseDelta() * _entity->GetScale().x);
 			}
 		}
 	}

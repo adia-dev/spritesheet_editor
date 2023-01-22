@@ -33,10 +33,14 @@ namespace sse {
 		virtual void OnRender(sf::RenderTarget& target) = 0;
 		virtual void OnUpdate(float dt) {}
 
-		void SetEntity(std::shared_ptr<SpriteEntity>& entity) { _entity = entity; }
+		void                          SetEntity(std::shared_ptr<SpriteEntity>& entity) { _entity = entity; }
+		std::shared_ptr<SpriteEntity> GetEntity() const { return _entity; }
+
+		void                 SetWorkspaceRect(const sf::FloatRect& rect) { _workspaceRect = rect; }
+		const sf::FloatRect& GetWorkspaceRect() const { return _workspaceRect; }
 
 	  protected:
 		std::shared_ptr<SpriteEntity> _entity;
-		bool                          _canInteract = false;
+		sf::FloatRect                 _workspaceRect;
 	};
 } // namespace sse

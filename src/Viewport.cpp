@@ -123,6 +123,9 @@ namespace sse {
 		_viewportRect       = ImRect(
             ImGui::GetCursorScreenPos(),
             ImVec2(ImGui::GetCursorScreenPos().x + viewportSize.x, ImGui::GetCursorScreenPos().y + viewportSize.y));
+		if (Application::GetCurrentTool() != nullptr)
+			Application::GetCurrentTool()->SetWorkspaceRect(
+			    sf::FloatRect(_viewportRect.Min.x, _viewportRect.Min.y, viewportSize.x, viewportSize.y));
 		_view.setSize(viewportSize.x, viewportSize.y);
 
 		_renderTexture.clear(sf::Color::Transparent);
