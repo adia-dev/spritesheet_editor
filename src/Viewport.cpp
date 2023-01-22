@@ -20,7 +20,7 @@ namespace sse {
 				return true;
 			}
 
-			if (event.key.code == sf::Keyboard::D) {
+			if (event.key.code == sf::Keyboard::Tab) {
 				_showDebug = !_showDebug;
 				return true;
 			}
@@ -141,7 +141,7 @@ namespace sse {
 
 		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
 
-		_renderTexture.setView(_renderTexture.getDefaultView());
+		// _renderTexture.setView(_renderTexture.getDefaultView());
 
 		ImGui::Image(_renderTexture);
 	}

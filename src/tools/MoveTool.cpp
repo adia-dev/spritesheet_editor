@@ -34,8 +34,8 @@ namespace sse {
 			sf::RectangleShape rect;
 			rect.setSize(sf::Vector2f(_entity->GetWidth(), _entity->GetHeight()));
 			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Red);
-			rect.setOutlineThickness(1.0f);
+			rect.setOutlineColor(sf::Color::Yellow);
+			rect.setOutlineThickness(2.0f);
 			rect.setPosition(_entity->GetPosition());
 			target.draw(rect);
 		}
@@ -49,6 +49,12 @@ namespace sse {
 		_currentSpeed = Maths::Lerp(_currentSpeed, targetSpeed, 100.f * dt);
 
 		_entity->Move(Input::GetDirection() * _currentSpeed * dt);
+
+		if (_entity->IsHovered(Application::WorldToRenderTexture(Input::GetMousePosition()))) {
+			if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
+				_entity->Move(Input::GetMouseDelta());
+			}
+		}
 	}
 
 } // namespace sse
