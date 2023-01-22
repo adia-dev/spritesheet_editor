@@ -11,8 +11,9 @@ namespace sse {
 	// Tool
 	class Tool {
 	  public:
-		Tool(): _entity(nullptr) {}
-		Tool(std::shared_ptr<SpriteEntity>& entity) { _entity = entity; }
+		Tool(): _entity(nullptr), _name("Tool") {}
+		Tool(std::shared_ptr<SpriteEntity>& entity): _entity(entity) {}
+		Tool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): _entity(entity), _name(name) {}
 		virtual ~Tool() = default;
 
 		virtual bool HandleSFMLEvent(sf::Event& event);

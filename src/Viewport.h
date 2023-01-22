@@ -64,6 +64,6 @@ namespace sse {
 		void RenderSelection();
 
 		template<typename Callback>
-		static void RenderOverlay(Callback&& callback);
+		static void RenderOverlay(Callback&& callback, const char* id = "Overlay");
 	};
 } // namespace sse

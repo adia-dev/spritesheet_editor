@@ -11,6 +11,7 @@ namespace sse {
 	  public:
 		MoveTool() = default;
 		MoveTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
+		MoveTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
 
 		// virtual bool HandleSFMLEvent(sf::Event& event) override;
 

@@ -46,6 +46,8 @@ namespace sse {
 		if (_showDebug) RenderDebug();
 
 		RenderViewport();
+		RenderToolbox();
+
 		ImGui::End();
 	}
 
@@ -145,6 +147,7 @@ namespace sse {
 				if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
 				if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
 				if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
+				if (ImGui::MenuItem("Follow mouse", NULL, location == 4)) location = 4;
 				if (ImGui::MenuItem("Close")) visible = false;
 				ImGui::EndPopup();
 			}
@@ -152,23 +155,39 @@ namespace sse {
 	}
 
 	void Viewport::RenderToolbox() {
-		RenderOverlay([&](bool& visible, int& location) {
-			ImGui::Text("Toolbox");
-			ImGui::Separator();
+		RenderOverlay(
+		    [&](bool& visible, int& location) {
+			    ImGui::Text("Toolbox");
+			    ImGui::Separator();
 
-			ImGui::Text("Current Tool: %s", Application::GetCurrentTool()->GetName().c_str());
+			    ImGui::Text("Current Tool: %s", Application::GetCurrentTool()->GetName().c_str());
 
-			ImGui::Separator();
+			    ImGui::Separator();
 
-			ImGui::Text("Tools");
-			ImGui::Separator();
+			    ImGui::Text("Tools");
+			    ImGui::Separator();
 
-			for (auto& tool : Application::GetTools()) {
-				if (ImGui::Button(tool->GetName().c_str())) {
-					Application::SetCurrentTool(tool);
-				}
-			}
-		});
+			    for (auto& tool : Application::GetTools()) {
+				    ImGui::PushID(tool->GetName().c_str());
+				    if (ImGui::Button(tool->GetName().c_str())) {
+					    Application::SetCurrentTool(tool);
+				    }
+				    ImGui::PopID();
+			    }
+
+			    if (ImGui::BeginPopupContextWindow()) {
+				    if (ImGui::MenuItem("Custom", NULL, location == -1)) location = -1;
+				    if (ImGui::MenuItem("Center", NULL, location == -2)) location = -2;
+				    if (ImGui::MenuItem("Top-left", NULL, location == 0)) location = 0;
+				    if (ImGui::MenuItem("Top-right", NULL, location == 1)) location = 1;
+				    if (ImGui::MenuItem("Bottom-left", NULL, location == 2)) location = 2;
+				    if (ImGui::MenuItem("Bottom-right", NULL, location == 3)) location = 3;
+				    if (ImGui::MenuItem("Follow mouse", NULL, location == 4)) location = 4;
+				    if (ImGui::MenuItem("Close")) visible = false;
+				    ImGui::EndPopup();
+			    }
+		    },
+		    "Toolbox");
 	}
 
 	void Viewport::RenderGrid(sf::RenderTarget& target, float cellSize, sf::Color color) {
@@ -210,9 +229,11 @@ namespace sse {
 	}
 
 	template<typename Callback>
-	void Viewport::RenderOverlay(Callback&& callback) {
-		static int       location     = 0;
-		static bool      visible      = true;
+	void Viewport::RenderOverlay(Callback&& callback, const char* id) {
+		static int  location  = 0;
+		static bool visible   = true;
+		ImVec2      mouse_pos = Input::GetMousePositionImGui();
+
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking |
 		                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
 		                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
@@ -223,6 +244,7 @@ namespace sse {
 			ImVec2               work_pos  = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
 			ImVec2               work_size = viewport->WorkSize;
 			ImVec2               window_pos, window_pos_pivot;
+
 			window_pos.x = (location & 1) ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD);
 			window_pos.y =
 			    (location & 2) ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD + ImGui::GetFrameHeight());
@@ -235,9 +257,13 @@ namespace sse {
 			// Center window
 			ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 			window_flags |= ImGuiWindowFlags_NoMove;
+		} else if (location == 4) {
+			ImGui::SetNextWindowPos(mouse_pos, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+			window_flags |= ImGuiWindowFlags_NoMove;
 		}
 		ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
-		if (ImGui::Begin("Overlay", &visible, window_flags)) {
+		const char name[256] = {0};
+		if (ImGui::Begin(id, &visible, window_flags)) {
 			callback(visible, location);
 		}
 		ImGui::End();

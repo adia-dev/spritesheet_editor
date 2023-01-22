@@ -38,5 +38,7 @@ namespace sse {
 			default:
 				break;
 		}
+
+		return false;
 	}
 } // namespace sse
