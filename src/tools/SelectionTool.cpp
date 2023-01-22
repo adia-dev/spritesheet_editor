@@ -14,16 +14,6 @@ namespace sse {
 			_selectionRect.width = Application::WorldToRenderTexture(Input::GetMousePosition()).x - _selectionRect.left;
 			_selectionRect.height = Application::WorldToRenderTexture(Input::GetMousePosition()).y - _selectionRect.top;
 
-			if (_selectionRect.width < 0) {
-				_selectionRect.left += _selectionRect.width;
-				_selectionRect.width = -_selectionRect.width;
-			}
-
-			if (_selectionRect.height < 0) {
-				_selectionRect.top += _selectionRect.height;
-				_selectionRect.height = -_selectionRect.height;
-			}
-
 			auto entities = Application::GetEntities();
 			_selectedEntities.clear();
 			std::copy_if(

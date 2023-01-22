@@ -43,7 +43,7 @@ namespace sse {
 		bool _snapMovement = false;
 		bool _snapZoom     = false;
 		bool _showGrid     = true;
-		bool _showDebug    = true;
+		bool _showDebug    = false;
 
 		// Events
 		sf::FloatRect _selectionRect;
