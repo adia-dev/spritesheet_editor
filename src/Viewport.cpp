@@ -24,14 +24,33 @@ namespace sse {
 				_showDebug = !_showDebug;
 				return true;
 			}
+
+			// Numpad keys to change tool
+			if (event.key.code >= sf::Keyboard::Numpad1 && event.key.code <= sf::Keyboard::Numpad9) {
+				std::cout << "Changing tool to " << event.key.code - sf::Keyboard::Numpad1 << std::endl;
+				if (Application::SetCurrentTool(event.key.code - sf::Keyboard::Numpad1)) {
+					std::cout << "Changing tool to " << Application::GetCurrentTool()->GetName() << std::endl;
+				} else {
+					std::cout << "Tool " << event.key.code - sf::Keyboard::Numpad1 << " is not available" << std::endl;
+				}
+				return true;
+			}
+
+			// Numpad keys to change tool
+			if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num9) {
+				if (Application::SetCurrentTool(event.key.code - sf::Keyboard::Num1)) {
+					std::cout << "Changing tool to " << Application::GetCurrentTool()->GetName() << std::endl;
+				} else {
+					std::cout << "Tool " << event.key.code - sf::Keyboard::Num1 << " is not available" << std::endl;
+				}
+				return true;
+			}
 		}
 
 		return false;
 	}
 
 	void Viewport::OnUpdate(float dt) {
-		if (_desiredViewCenter == sf::Vector2f(-1.f, -1.f)) _desiredViewCenter = _view.getCenter();
-
 		_renderTexture.setView(_view);
 		_viewMousePos = Application::WorldToRenderTexture(Input::GetMousePosition());
 		_renderTexture.setView(_renderTexture.getDefaultView());

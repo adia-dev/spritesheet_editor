@@ -45,7 +45,21 @@ namespace sse {
 		static std::shared_ptr<SpriteEntity>        GetSpriteEntity() { return GetInstance()->_spriteEntity; }
 
 		static std::shared_ptr<Tool> GetCurrentTool() { return GetInstance()->_currentTool; }
-		static void                  SetCurrentTool(std::shared_ptr<Tool>& tool) { GetInstance()->_currentTool = tool; }
+		static bool                  SetCurrentTool(std::shared_ptr<Tool>& tool) {
+            if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnDetach();
+            GetInstance()->_currentTool = tool;
+            if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnAttach();
+            return true;
+		}
+		static bool SetCurrentTool(int index) {
+			if (index < 0 || index >= GetInstance()->_tools.size()) return false;
+
+			if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnDetach();
+			GetInstance()->_currentTool = GetInstance()->_tools[index];
+			if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnAttach();
+
+			return true;
+		}
 
 		static std::vector<std::shared_ptr<Tool>> GetTools() { return GetInstance()->_tools; }
 

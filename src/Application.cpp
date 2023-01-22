@@ -134,11 +134,11 @@ namespace sse {
 
 		float deltaTime = _imIO->DeltaTime;
 
-		if (_currentTool != nullptr) _currentTool->OnUpdate(deltaTime);
-
 		for (auto entitiy : _entities) {
 			entitiy->OnUpdate(deltaTime);
 		}
+
+		if (_currentTool != nullptr) _currentTool->OnUpdate(deltaTime);
 
 		for (auto &layer : _layers) {
 			layer->OnUpdate(deltaTime);
@@ -244,6 +244,7 @@ namespace sse {
 	int Application::InitEntities() {
 		_spriteEntity =
 		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/broly/1.png"));
+		_spriteEntity->SetName("Broly");
 
 		PushEntity(_spriteEntity);
 

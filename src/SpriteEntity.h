@@ -21,6 +21,7 @@ namespace sse {
 		void OnAwake() override;
 		void OnUpdate(float dt) override;
 		void OnRender(sf::RenderTarget& target) override;
+		void OnHover() override;
 		void OnRenderProperties() override;
 
 		sf::Sprite& GetSprite();

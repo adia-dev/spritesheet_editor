@@ -23,6 +23,14 @@ namespace sse {
 				_selectionRect.top += _selectionRect.height;
 				_selectionRect.height = -_selectionRect.height;
 			}
+
+			auto entities = Application::GetEntities();
+			_selectedEntities.clear();
+			std::copy_if(
+			    entities.begin(),
+			    entities.end(),
+			    std::back_inserter(_selectedEntities),
+			    [&](std::shared_ptr<Entity> entity) { return _selectionRect.intersects(entity->GetBounds()); });
 		}
 	}
 
@@ -65,5 +73,7 @@ namespace sse {
 
 	void SelectionTool::OnUpdate(float dt) {
 		if (_entity == nullptr) return;
+
+		for (auto entity : _selectedEntities) entity->OnHover();
 	}
 } // namespace sse

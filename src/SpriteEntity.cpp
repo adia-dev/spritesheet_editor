@@ -9,6 +9,9 @@
 namespace sse {
 
 	SpriteEntity::SpriteEntity(const std::filesystem::path& path) {
+		if (_name == "") {
+			_name = path.filename().c_str();
+		}
 		_texture         = AssetManager::GetTexture(path);
 		_originalTexture = AssetManager::GetTexture(path);
 	}
@@ -25,9 +28,13 @@ namespace sse {
 		_sprite.setTexture(_texture);
 	}
 
-	void SpriteEntity::OnAwake() {}
+	void SpriteEntity::OnAwake() {
+		Entity::OnAwake();
+	}
 
 	void SpriteEntity::OnUpdate(float dt) {
+		_isHovered = false;
+
 		_bounds = _sprite.getGlobalBounds();
 		_sprite.setPosition(_position);
 		_sprite.setScale(_scale);
@@ -37,6 +44,21 @@ namespace sse {
 	void SpriteEntity::OnRender(sf::RenderTarget& target) {
 		target.draw(_sprite);
 		OnRenderFrames(target);
+
+		if (_isHovered) {
+			sf::RectangleShape rect;
+			rect.setSize(sf::Vector2f(_bounds.width, _bounds.height));
+			rect.setPosition(_position);
+			rect.setRotation(_rotation);
+			rect.setFillColor(sf::Color(0, 0, 0, 100));
+			rect.setOutlineColor(sf::Color::Yellow);
+			rect.setOutlineThickness(1.f);
+			target.draw(rect);
+		}
+	}
+
+	void SpriteEntity::OnHover() {
+		_isHovered = true;
 	}
 
 	void SpriteEntity::OnRenderFrames(sf::RenderTarget& target) {
@@ -73,7 +95,7 @@ namespace sse {
 
 	void SpriteEntity::OnRenderProperties() {
 		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-		if (ImGui::TreeNode("Sprite Entity")) {
+		if (ImGui::TreeNode(_name.c_str())) {
 			{
 				ImVec2 position(_position.x, _position.y);
 				float  scale    = _scale.x;

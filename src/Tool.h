@@ -18,6 +18,9 @@ namespace sse {
 
 		virtual bool HandleSFMLEvent(sf::Event& event);
 
+		virtual void OnAttach() {}
+		virtual void OnDetach() {}
+
 		virtual void OnMouseMove() {}
 		virtual void OnMouseLeave() {}
 		virtual void OnMouseEnter() {}
@@ -42,8 +45,9 @@ namespace sse {
 		const std::string& GetName() const { return _name; }
 
 	  protected:
-		std::string                   _name;
-		std::shared_ptr<SpriteEntity> _entity;
-		sf::FloatRect                 _workspaceRect;
+		std::string                          _name;
+		std::shared_ptr<SpriteEntity>        _entity;
+		sf::FloatRect                        _workspaceRect;
+		std::vector<std::shared_ptr<Entity>> _selectedEntities;
 	};
 } // namespace sse

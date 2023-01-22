@@ -44,11 +44,11 @@ namespace sse {
 
 		_currentSpeed = Maths::Lerp(_currentSpeed, targetSpeed, 100.f * dt);
 
-		_entity->Move(Input::GetDirection() * _currentSpeed * dt);
+		for (auto entity : _selectedEntities) entity->Move(Input::GetDirection() * _currentSpeed * dt);
 
 		if (_entity->IsHovered(Application::WorldToRenderTexture(Input::GetMousePosition()))) {
 			if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
-				_entity->Move(Input::GetMouseDelta() * _entity->GetScale().x);
+				for (auto entity : _selectedEntities) entity->Move(Input::GetMouseDelta() * _entity->GetScale().x);
 			}
 		}
 	}

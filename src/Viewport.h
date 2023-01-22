@@ -32,7 +32,6 @@ namespace sse {
 		sf::View     _view;
 		sf::Vector2f _viewportMousePos;
 		sf::Vector2f _viewMousePos;
-		sf::Vector2f _desiredViewCenter = {-1.f, -1.f};
 
 		// Camera movement and zoom
 		float _viewSpeed           = 500.f;

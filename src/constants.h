@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+#include <numeric>
 #include <sstream>
 #include <stdio.h>
 #include <string>

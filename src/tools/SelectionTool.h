@@ -13,6 +13,9 @@ namespace sse {
 		SelectionTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
 		SelectionTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
 
+		// void OnAttach() override;
+		// void OnDetach() override;
+
 		void OnMouseMove() override;
 		void OnMouseLeave() override;
 		void OnMouseEnter() override;
