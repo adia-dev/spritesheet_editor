@@ -258,9 +258,8 @@ namespace sse {
 	}
 
 	int Application::InitTool() {
-		// _currentTool = std::make_shared<SelectTool>();
-		_currentTool = std::make_shared<MoveTool>();
-		_currentTool->SetEntity(_spriteEntity);
+		_tools.emplace_back(std::make_shared<MoveTool>(_spriteEntity));
+		_currentTool = _tools[0];
 
 		return 1;
 	}

@@ -47,6 +47,8 @@ namespace sse {
 		static std::shared_ptr<Tool> GetCurrentTool() { return GetInstance()->_currentTool; }
 		static void                  SetCurrentTool(std::shared_ptr<Tool>& tool) { GetInstance()->_currentTool = tool; }
 
+		static std::vector<std::shared_ptr<Tool>> GetTools() { return GetInstance()->_tools; }
+
 		static sf::RenderTexture& GetRenderTexture() { return GetInstance()->_renderTexture; }
 
 		template<typename T>
@@ -89,10 +91,13 @@ namespace sse {
 		sf::Text _text;
 
 		// Application variables
-		std::vector<std::shared_ptr<Layer>>  _layers;
+		std::vector<std::shared_ptr<Layer>> _layers;
+
 		std::vector<std::shared_ptr<Entity>> _entities;
 		std::shared_ptr<SpriteEntity>        _spriteEntity = nullptr;
-		std::shared_ptr<Tool>                _currentTool  = nullptr;
+
+		std::vector<std::shared_ptr<Tool>> _tools;
+		std::shared_ptr<Tool>              _currentTool = nullptr;
 
 	  public:
 		Application(Application const&)            = delete;

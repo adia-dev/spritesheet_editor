@@ -151,6 +151,26 @@ namespace sse {
 		});
 	}
 
+	void Viewport::RenderToolbox() {
+		RenderOverlay([&](bool& visible, int& location) {
+			ImGui::Text("Toolbox");
+			ImGui::Separator();
+
+			ImGui::Text("Current Tool: %s", Application::GetCurrentTool()->GetName().c_str());
+
+			ImGui::Separator();
+
+			ImGui::Text("Tools");
+			ImGui::Separator();
+
+			for (auto& tool : Application::GetTools()) {
+				if (ImGui::Button(tool->GetName().c_str())) {
+					Application::SetCurrentTool(tool);
+				}
+			}
+		});
+	}
+
 	void Viewport::RenderGrid(sf::RenderTarget& target, float cellSize, sf::Color color) {
 		if (!_showGrid) return;
 

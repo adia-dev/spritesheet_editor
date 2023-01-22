@@ -39,7 +39,11 @@ namespace sse {
 		void                 SetWorkspaceRect(const sf::FloatRect& rect) { _workspaceRect = rect; }
 		const sf::FloatRect& GetWorkspaceRect() const { return _workspaceRect; }
 
+		void               SetName(const std::string& name) { _name = name; }
+		const std::string& GetName() const { return _name; }
+
 	  protected:
+		std::string                   _name;
 		std::shared_ptr<SpriteEntity> _entity;
 		sf::FloatRect                 _workspaceRect;
 	};
