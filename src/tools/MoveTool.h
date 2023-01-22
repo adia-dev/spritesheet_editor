@@ -9,11 +9,11 @@ namespace sse {
 	// MoveTool
 	class MoveTool: public Tool {
 	  public:
-		MoveTool() = default;
+		MoveTool(): Tool() {}
 		MoveTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
 		MoveTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
 
-		//  bool HandleSFMLEvent(sf::Event& event) override;
+		//  bool OnHandleEvents(sf::Event& event) override;
 
 		void OnMouseMove() override;
 		void OnMouseLeave() override;

@@ -11,7 +11,7 @@ namespace sse {
 		_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 	}
 
-	bool Viewport::OnHandleSFMLEvent(sf::Event& event) {
+	bool Viewport::OnHandleEvents(sf::Event& event) {
 		if (!_viewportRect.Contains(Input::GetMousePositionImGui())) return false;
 
 		if (event.type == sf::Event::KeyPressed) {
@@ -27,9 +27,8 @@ namespace sse {
 
 			// Numpad keys to change tool
 			if (event.key.code >= sf::Keyboard::Numpad1 && event.key.code <= sf::Keyboard::Numpad9) {
-				std::cout << "Changing tool to " << event.key.code - sf::Keyboard::Numpad1 << std::endl;
-				if (Application::SetCurrentTool(event.key.code - sf::Keyboard::Numpad1)) {
-					std::cout << "Changing tool to " << Application::GetCurrentTool()->GetName() << std::endl;
+				if (Toolbox::SetCurrentTool(event.key.code - sf::Keyboard::Numpad1)) {
+					std::cout << "Changing tool to " << Toolbox::GetCurrentTool()->GetName() << std::endl;
 				} else {
 					std::cout << "Tool " << event.key.code - sf::Keyboard::Numpad1 << " is not available" << std::endl;
 				}
@@ -38,8 +37,8 @@ namespace sse {
 
 			// Numpad keys to change tool
 			if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num9) {
-				if (Application::SetCurrentTool(event.key.code - sf::Keyboard::Num1)) {
-					std::cout << "Changing tool to " << Application::GetCurrentTool()->GetName() << std::endl;
+				if (Toolbox::SetCurrentTool(event.key.code - sf::Keyboard::Num1)) {
+					std::cout << "Changing tool to " << Toolbox::GetCurrentTool()->GetName() << std::endl;
 				} else {
 					std::cout << "Tool " << event.key.code - sf::Keyboard::Num1 << " is not available" << std::endl;
 				}
@@ -52,7 +51,7 @@ namespace sse {
 
 	void Viewport::OnUpdate(float dt) {
 		_renderTexture.setView(_view);
-		_viewMousePos = Application::WorldToRenderTexture(Input::GetMousePosition());
+		_viewMousePos = Application::WorldToRenderTarget(Input::GetMousePosition());
 		_renderTexture.setView(_renderTexture.getDefaultView());
 		_viewportMousePos =
 		    Input::GetMousePosition() - sf::Vector2f(ImGui::GetStyle().WindowPadding.x,
@@ -75,8 +74,8 @@ namespace sse {
 		_viewportRect       = ImRect(
             ImGui::GetCursorScreenPos(),
             ImVec2(ImGui::GetCursorScreenPos().x + viewportSize.x, ImGui::GetCursorScreenPos().y + viewportSize.y));
-		if (Application::GetCurrentTool() != nullptr)
-			Application::GetCurrentTool()->SetWorkspaceRect(
+		if (Toolbox::GetCurrentTool() != nullptr)
+			Toolbox::SetWorkspaceRect(
 			    sf::FloatRect(_viewportRect.Min.x, _viewportRect.Min.y, viewportSize.x, viewportSize.y));
 		_view.setSize(viewportSize.x, viewportSize.y);
 
@@ -88,7 +87,7 @@ namespace sse {
 
 		Application::GetSpriteEntity()->OnRender(_renderTexture);
 
-		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
+		Toolbox::OnRender(_renderTexture);
 
 		// _renderTexture.setView(_renderTexture.getDefaultView());
 
@@ -173,17 +172,20 @@ namespace sse {
 			    ImGui::Text("Toolbox");
 			    ImGui::Separator();
 
-			    ImGui::Text("Current Tool: %s", Application::GetCurrentTool()->GetName().c_str());
+			    if (Toolbox::GetCurrentTool() != nullptr)
+				    ImGui::Text("Current Tool: %s", Toolbox::GetCurrentTool()->GetName().c_str());
+			    else
+				    ImGui::Text("Current Tool: <none>");
 
 			    ImGui::Separator();
 
 			    ImGui::Text("Tools");
 			    ImGui::Separator();
 
-			    for (auto& tool : Application::GetTools()) {
+			    for (auto& tool : Toolbox::GetTools()) {
 				    ImGui::PushID(tool->GetName().c_str());
 				    if (ImGui::Button(tool->GetName().c_str())) {
-					    Application::SetCurrentTool(tool);
+					    Toolbox::SetCurrentTool(tool);
 				    }
 				    ImGui::PopID();
 			    }

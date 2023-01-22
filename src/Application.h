@@ -7,7 +7,7 @@
 #include "Hierarchy.h"
 #include "Input.h"
 #include "SpriteEntity.h"
-#include "Tool.h"
+#include "Toolbox.h"
 #include "Viewport.h"
 #include "utils/Maths.hpp"
 
@@ -44,38 +44,10 @@ namespace sse {
 		static std::vector<std::shared_ptr<Entity>> GetEntities() { return GetInstance()->_entities; }
 		static std::shared_ptr<SpriteEntity>        GetSpriteEntity() { return GetInstance()->_spriteEntity; }
 
-		static std::shared_ptr<Tool> GetCurrentTool() { return GetInstance()->_currentTool; }
-		static bool                  SetCurrentTool(std::shared_ptr<Tool>& tool) {
-            if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnDetach();
-            GetInstance()->_currentTool = tool;
-            if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnAttach();
-            return true;
-		}
-		static bool SetCurrentTool(int index) {
-			if (index < 0 || index >= GetInstance()->_tools.size()) return false;
-
-			if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnDetach();
-			GetInstance()->_currentTool = GetInstance()->_tools[index];
-			if (GetInstance()->_currentTool != nullptr) GetInstance()->_currentTool->OnAttach();
-
-			return true;
-		}
-
-		static std::vector<std::shared_ptr<Tool>> GetTools() { return GetInstance()->_tools; }
-
 		static sf::RenderTexture& GetRenderTexture() { return GetInstance()->_renderTexture; }
 
-		template<typename T>
-		static sf::Vector2f WorldToRenderTexture(sf::Vector2<T> worldPos) {
-			return GetInstance()->_renderTexture.mapPixelToCoords(
-			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
-			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
-		}
-
-		static sf::Vector2f WorldToRenderTexture(ImVec2 worldPos) {
-			return GetInstance()->_renderTexture.mapPixelToCoords(
-			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
-			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
+		static sf::Vector2f WorldToRenderTarget(const sf::Vector2f& worldPos) {
+			return Maths::WorldToRenderTarget(worldPos, GetRenderTexture());
 		}
 
 	  private:
@@ -85,7 +57,7 @@ namespace sse {
 		int InitImGuiSFML();
 		int InitEntities();
 		int InitLayers();
-		int InitTool();
+		int InitToolbox();
 
 		void HandleEvents();
 		void Update();
@@ -109,9 +81,6 @@ namespace sse {
 
 		std::vector<std::shared_ptr<Entity>> _entities;
 		std::shared_ptr<SpriteEntity>        _spriteEntity = nullptr;
-
-		std::vector<std::shared_ptr<Tool>> _tools;
-		std::shared_ptr<Tool>              _currentTool = nullptr;
 
 	  public:
 		Application(Application const&)            = delete;

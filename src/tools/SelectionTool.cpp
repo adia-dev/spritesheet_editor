@@ -8,18 +8,16 @@
 namespace sse {
 
 	void SelectionTool::OnMouseMove() {
-		if (_entity == nullptr) return;
-
 		if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
-			_selectionRect.width = Application::WorldToRenderTexture(Input::GetMousePosition()).x - _selectionRect.left;
-			_selectionRect.height = Application::WorldToRenderTexture(Input::GetMousePosition()).y - _selectionRect.top;
+			_selectionRect.width  = Application::WorldToRenderTarget(Input::GetMousePosition()).x - _selectionRect.left;
+			_selectionRect.height = Application::WorldToRenderTarget(Input::GetMousePosition()).y - _selectionRect.top;
 
 			auto entities = Application::GetEntities();
-			_selectedEntities.clear();
+			Toolbox::ClearSelectedEntities();
 			std::copy_if(
 			    entities.begin(),
 			    entities.end(),
-			    std::back_inserter(_selectedEntities),
+			    std::back_inserter(Toolbox::GetSelectedEntities()),
 			    [&](std::shared_ptr<Entity> entity) { return _selectionRect.intersects(entity->GetBounds()); });
 		}
 	}
@@ -29,19 +27,15 @@ namespace sse {
 	void SelectionTool::OnMouseEnter() {}
 
 	void SelectionTool::OnMouseButtonDown(sf::Mouse::Button button) {
-		if (_entity == nullptr) return;
-
 		if (button == sf::Mouse::Left) {
-			_selectionRect.left   = Application::WorldToRenderTexture(Input::GetMousePosition()).x;
-			_selectionRect.top    = Application::WorldToRenderTexture(Input::GetMousePosition()).y;
+			_selectionRect.left   = Application::WorldToRenderTarget(Input::GetMousePosition()).x;
+			_selectionRect.top    = Application::WorldToRenderTarget(Input::GetMousePosition()).y;
 			_selectionRect.width  = 0;
 			_selectionRect.height = 0;
 		}
 	}
 
-	void SelectionTool::OnMouseButtonUp(sf::Mouse::Button button) {
-		if (_entity == nullptr) return;
-	}
+	void SelectionTool::OnMouseButtonUp(sf::Mouse::Button button) {}
 
 	void SelectionTool::OnMouseWheelScroll(sf::Event::MouseWheelScrollEvent& event) {}
 
@@ -50,7 +44,7 @@ namespace sse {
 	void SelectionTool::OnKeyUp(sf::Keyboard::Key key) {}
 
 	void SelectionTool::OnRender(sf::RenderTarget& target) {
-		if (_entity == nullptr || _selectionRect.width == 0 || _selectionRect.height == 0) return;
+		if (_selectionRect.width == 0 || _selectionRect.height == 0) return;
 
 		sf::RectangleShape rect;
 		rect.setFillColor(sf::Color::Transparent);
@@ -62,8 +56,6 @@ namespace sse {
 	}
 
 	void SelectionTool::OnUpdate(float dt) {
-		if (_entity == nullptr) return;
-
-		for (auto entity : _selectedEntities) entity->OnHover();
+		for (auto entity : Toolbox::GetSelectedEntities()) entity->OnHover();
 	}
 } // namespace sse

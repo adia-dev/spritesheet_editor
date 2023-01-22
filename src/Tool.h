@@ -16,7 +16,7 @@ namespace sse {
 		Tool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): _entity(entity), _name(name) {}
 		virtual ~Tool() = default;
 
-		virtual bool HandleSFMLEvent(sf::Event& event);
+		virtual bool OnHandleEvents(sf::Event& event);
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
@@ -38,16 +38,12 @@ namespace sse {
 		void                          SetEntity(std::shared_ptr<SpriteEntity>& entity) { _entity = entity; }
 		std::shared_ptr<SpriteEntity> GetEntity() const { return _entity; }
 
-		void                 SetWorkspaceRect(const sf::FloatRect& rect) { _workspaceRect = rect; }
-		const sf::FloatRect& GetWorkspaceRect() const { return _workspaceRect; }
-
 		void               SetName(const std::string& name) { _name = name; }
 		const std::string& GetName() const { return _name; }
 
 	  protected:
-		std::string                          _name;
-		std::shared_ptr<SpriteEntity>        _entity;
-		sf::FloatRect                        _workspaceRect;
-		std::vector<std::shared_ptr<Entity>> _selectedEntities;
+		std::string                   _name;
+		std::shared_ptr<SpriteEntity> _entity;
+		sf::FloatRect                 _roiRect;
 	};
 } // namespace sse

@@ -75,5 +75,18 @@ namespace sse {
 		static sf::Rect<T> ImRectToSFRect(const ImRect& rect) {
 			return sf::Rect<T>(rect.Min.x, rect.Min.y, rect.Max.x - rect.Min.x, rect.Max.y - rect.Min.y);
 		}
+
+		template<typename T>
+		static sf::Vector2f WorldToRenderTarget(sf::Vector2<T> worldPos, const sf::RenderTarget& renderTarget) {
+			return renderTarget.mapPixelToCoords(
+			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
+			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
+		}
+
+		static sf::Vector2f WorldToRenderTarget(ImVec2 worldPos, const sf::RenderTarget& renderTarget) {
+			return renderTarget.mapPixelToCoords(
+			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
+			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
+		}
 	};
 } // namespace sse

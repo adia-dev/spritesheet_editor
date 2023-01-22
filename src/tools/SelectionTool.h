@@ -9,7 +9,7 @@ namespace sse {
 	// SelectionTool
 	class SelectionTool: public Tool {
 	  public:
-		SelectionTool() = default;
+		SelectionTool(): Tool() {}
 		SelectionTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
 		SelectionTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
 

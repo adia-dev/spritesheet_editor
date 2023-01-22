@@ -15,7 +15,7 @@ namespace sse {
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 
-		virtual bool OnHandleSFMLEvent(sf::Event& event) { return false; }
+		virtual bool OnHandleEvents(sf::Event& event) { return false; }
 		virtual void OnHandleImGuiEvent(ImGuiIO& io) {}
 		virtual void OnUpdate(float dt) {}
 		virtual void OnRenderUI() {}

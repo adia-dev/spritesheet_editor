@@ -24,31 +24,33 @@ namespace sse {
 	void MoveTool::OnKeyUp(sf::Keyboard::Key key) {}
 
 	void MoveTool::OnRender(sf::RenderTarget& target) {
-		if (_entity == nullptr) return;
+		sf::RectangleShape rect;
 
-		if (_entity->IsHovered(Application::WorldToRenderTexture(Input::GetMousePosition()))) {
-			sf::RectangleShape rect;
-			rect.setSize(sf::Vector2f(_entity->GetWidth(), _entity->GetHeight()));
-			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Yellow);
+		for (auto entity : Toolbox::GetSelectedEntities()) {
+			bool hovered = entity->IsHovered(Application::WorldToRenderTarget(Input::GetMousePosition()));
+			rect.setSize(sf::Vector2f(entity->GetWidth(), entity->GetHeight()));
+			rect.setFillColor(hovered ? sf::Color(0, 0, 0, 100) : sf::Color::Transparent);
+			rect.setOutlineColor(hovered ? sf::Color::Yellow : sf::Color::Red);
 			rect.setOutlineThickness(2.0f);
-			rect.setPosition(_entity->GetPosition());
+			rect.setPosition(entity->GetPosition());
 			target.draw(rect);
 		}
 	}
 
 	void MoveTool::OnUpdate(float dt) {
-		if (_entity == nullptr || !_workspaceRect.contains(Input::GetMousePosition())) return;
+		if (!Toolbox::GetWorkspaceRect().contains(Input::GetMousePosition())) return;
 
 		float targetSpeed = Maths::Magnitude(Input::GetDirection()) * _speed;
 
 		_currentSpeed = Maths::Lerp(_currentSpeed, targetSpeed, 100.f * dt);
 
-		for (auto entity : _selectedEntities) entity->Move(Input::GetDirection() * _currentSpeed * dt);
+		for (auto entity : Toolbox::GetSelectedEntities()) entity->Move(Input::GetDirection() * _currentSpeed * dt);
 
-		if (_entity->IsHovered(Application::WorldToRenderTexture(Input::GetMousePosition()))) {
-			if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
-				for (auto entity : _selectedEntities) entity->Move(Input::GetMouseDelta() * _entity->GetScale().x);
+		for (auto entity : Toolbox::GetSelectedEntities()) {
+			if (entity->IsHovered(Application::WorldToRenderTarget(Input::GetMousePosition()))) {
+				if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
+					entity->Move(Input::GetMouseDelta() * entity->GetScale().x);
+				}
 			}
 		}
 	}

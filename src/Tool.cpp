@@ -1,7 +1,7 @@
 #include "Tool.h"
 
 namespace sse {
-	bool Tool::HandleSFMLEvent(sf::Event& event) {
+	bool Tool::OnHandleEvents(sf::Event& event) {
 		switch (event.type) {
 			case sf::Event::MouseButtonPressed:
 				OnMouseButtonDown(event.mouseButton.button);

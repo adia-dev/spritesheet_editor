@@ -111,10 +111,10 @@ namespace sse {
 		while (_window->pollEvent(event)) {
 			ImGui::SFML::ProcessEvent(event);
 			Input::HandleEvents(event);
-			if (_currentTool != nullptr) _currentTool->HandleSFMLEvent(event);
+			Toolbox::OnHandleEvents(event);
 
 			for (auto &layer : _layers) {
-				if (layer->OnHandleSFMLEvent(event)) break;
+				if (layer->OnHandleEvents(event)) break;
 			}
 
 			if (event.type == sf::Event::Closed) {
@@ -138,7 +138,7 @@ namespace sse {
 			entitiy->OnUpdate(deltaTime);
 		}
 
-		if (_currentTool != nullptr) _currentTool->OnUpdate(deltaTime);
+		Toolbox::OnUpdate(deltaTime);
 
 		for (auto &layer : _layers) {
 			layer->OnUpdate(deltaTime);
@@ -187,7 +187,7 @@ namespace sse {
 		if (!instance->InitImGuiSFML()) return -1;
 		if (!instance->InitEntities()) return -1;
 		if (!instance->InitLayers()) return -1;
-		if (!instance->InitTool()) return -1;
+		if (!instance->InitToolbox()) return -1;
 
 		while (instance->_window->isOpen()) {
 			instance->HandleEvents();
@@ -259,11 +259,15 @@ namespace sse {
 		return 1;
 	}
 
-	int Application::InitTool() {
-		_tools.emplace_back(std::make_shared<MoveTool>(_spriteEntity, "Move Tool"));
-		_tools.emplace_back(std::make_shared<SelectionTool>(_spriteEntity, "Selection Tool"));
+	int Application::InitToolbox() {
+		std::shared_ptr<MoveTool>      moveTool      = std::make_shared<MoveTool>();
+		std::shared_ptr<SelectionTool> selectionTool = std::make_shared<SelectionTool>();
 
-		_currentTool = _tools[0];
+		moveTool->SetName("Move Tool");
+		selectionTool->SetName("Selection Tool");
+
+		Toolbox::PushTool(moveTool, true);
+		Toolbox::PushTool(selectionTool);
 
 		return 1;
 	}
