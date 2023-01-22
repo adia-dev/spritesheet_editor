@@ -4,7 +4,7 @@
 #include "Application.h"
 
 #include "components.h"
-#include "tools/MoveTool.h"
+#include "tools.h"
 
 #include <assert.h>
 
@@ -111,6 +111,7 @@ namespace sse {
 		while (_window->pollEvent(event)) {
 			ImGui::SFML::ProcessEvent(event);
 			Input::HandleEvents(event);
+			if (_currentTool != nullptr) _currentTool->HandleSFMLEvent(event);
 
 			for (auto &layer : _layers) {
 				if (layer->OnHandleSFMLEvent(event)) break;
@@ -259,6 +260,8 @@ namespace sse {
 
 	int Application::InitTool() {
 		_tools.emplace_back(std::make_shared<MoveTool>(_spriteEntity, "Move Tool"));
+		_tools.emplace_back(std::make_shared<SelectionTool>(_spriteEntity, "Selection Tool"));
+
 		_currentTool = _tools[0];
 
 		return 1;

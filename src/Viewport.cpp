@@ -69,12 +69,6 @@ namespace sse {
 
 		Application::GetSpriteEntity()->OnRender(_renderTexture);
 
-		sf::CircleShape circle(10.f);
-		circle.setFillColor(sf::Color::Red);
-		circle.setOrigin(10.f, 10.f);
-		circle.setPosition(_viewMousePos);
-		_renderTexture.draw(circle);
-
 		if (Application::GetCurrentTool() != nullptr) Application::GetCurrentTool()->OnRender(_renderTexture);
 
 		// _renderTexture.setView(_renderTexture.getDefaultView());

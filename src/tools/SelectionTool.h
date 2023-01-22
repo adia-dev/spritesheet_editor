@@ -1,19 +1,17 @@
 //
-// Created by abdoulayedia on 21.01.2023
+// Created by abdoulayedia on 22.01.2023
 //
 #pragma once
 
 #include "Tool.h"
 
 namespace sse {
-	// MoveTool
-	class MoveTool: public Tool {
+	// SelectionTool
+	class SelectionTool: public Tool {
 	  public:
-		MoveTool() = default;
-		MoveTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
-		MoveTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
-
-		//  bool HandleSFMLEvent(sf::Event& event) override;
+		SelectionTool() = default;
+		SelectionTool(std::shared_ptr<SpriteEntity>& entity): Tool(entity) {}
+		SelectionTool(std::shared_ptr<SpriteEntity>& entity, const std::string& name): Tool(entity, name) {}
 
 		void OnMouseMove() override;
 		void OnMouseLeave() override;
@@ -30,9 +28,6 @@ namespace sse {
 		void OnUpdate(float dt) override;
 
 	  private:
-		float _currentSpeed = 0.0f;
-		float _speed        = 1000.0f;
-		bool  _snap         = false;
-		float _snapSize     = 10.0f;
+		sf::FloatRect _selectionRect;
 	};
 } // namespace sse

@@ -7,10 +7,6 @@
 
 namespace sse {
 
-	void MoveTool::OnMouseDown() {}
-
-	void MoveTool::OnMouseUp() {}
-
 	void MoveTool::OnMouseLeave() {}
 
 	void MoveTool::OnMouseMove() {}

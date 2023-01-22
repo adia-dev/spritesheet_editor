@@ -18,8 +18,6 @@ namespace sse {
 
 		virtual bool HandleSFMLEvent(sf::Event& event);
 
-		virtual void OnMouseDown() {}
-		virtual void OnMouseUp() {}
 		virtual void OnMouseMove() {}
 		virtual void OnMouseLeave() {}
 		virtual void OnMouseEnter() {}
