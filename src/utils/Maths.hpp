@@ -88,5 +88,22 @@ namespace sse {
 			    sf::Vector2i(worldPos.x - ImGui::GetStyle().WindowPadding.x,
 			                 worldPos.y - ImGui::GetStyle().WindowPadding.y - ImGui::GetFrameHeight()));
 		}
+
+		static sf::FloatRect IntersectedArea(const sf::FloatRect& a, const sf::FloatRect& b) {
+			sf::FloatRect result;
+			result.left   = std::max(a.left, b.left);
+			result.top    = std::max(a.top, b.top);
+			result.width  = std::min(a.left + a.width, b.left + b.width) - result.left;
+			result.height = std::min(a.top + a.height, b.top + b.height) - result.top;
+			return result;
+		}
+
+		static sf::IntRect FloatToIntRect(const sf::FloatRect& rect) {
+			return sf::IntRect(rect.left, rect.top, rect.width, rect.height);
+		}
+
+		static sf::FloatRect IntToFloatRect(const sf::IntRect& rect) {
+			return sf::FloatRect(rect.left, rect.top, rect.width, rect.height);
+		}
 	};
 } // namespace sse

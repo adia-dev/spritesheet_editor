@@ -8,6 +8,8 @@
 namespace sse {
 
 	void SelectionTool::OnMouseMove() {
+		if (!Toolbox::GetWorkspaceRect().contains(Input::GetMousePosition())) return;
+
 		if (Input::IsMouseButtonDown(sf::Mouse::Left)) {
 			_selectionRect.width  = Application::WorldToRenderTarget(Input::GetMousePosition()).x - _selectionRect.left;
 			_selectionRect.height = Application::WorldToRenderTarget(Input::GetMousePosition()).y - _selectionRect.top;
@@ -27,6 +29,8 @@ namespace sse {
 	void SelectionTool::OnMouseEnter() {}
 
 	void SelectionTool::OnMouseButtonDown(sf::Mouse::Button button) {
+		if (!Toolbox::GetWorkspaceRect().contains(Input::GetMousePosition())) return;
+
 		if (button == sf::Mouse::Left) {
 			_selectionRect.left   = Application::WorldToRenderTarget(Input::GetMousePosition()).x;
 			_selectionRect.top    = Application::WorldToRenderTarget(Input::GetMousePosition()).y;
@@ -56,6 +60,7 @@ namespace sse {
 	}
 
 	void SelectionTool::OnUpdate(float dt) {
-		for (auto entity : Toolbox::GetSelectedEntities()) entity->OnHover();
+		for (auto entity : Toolbox::GetSelectedEntities())
+			if (entity->IsHovered(Application::WorldToRenderTarget(Input::GetMousePosition()))) entity->OnHover();
 	}
 } // namespace sse

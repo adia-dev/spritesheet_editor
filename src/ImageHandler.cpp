@@ -27,7 +27,7 @@ namespace sse {
 		return texture;
 	}
 
-	std::vector<sf::IntRect> ImageHandler::SliceFrames(const sf::Texture &texture, const sf::IntRect &roiRect) {
+	std::vector<sf::IntRect> ImageHandler::ExtractFrames(const sf::Texture &texture, const sf::IntRect &roiRect) {
 		// Declare OpenCV matrices and a vector of rectangles
 		cv::Mat                  original, img, gray, bw;
 		cv::Mat                  close, dil, blurred;

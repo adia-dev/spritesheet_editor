@@ -16,21 +16,21 @@ namespace sse {
 		// void OnAttach() override;
 		// void OnDetach() override;
 
-		void OnMouseMove() override;
-		void OnMouseLeave() override;
-		void OnMouseEnter() override;
+		virtual void OnMouseMove() override;
+		virtual void OnMouseLeave() override;
+		virtual void OnMouseEnter() override;
 
-		void OnMouseButtonUp(sf::Mouse::Button button) override;
-		void OnMouseButtonDown(sf::Mouse::Button button) override;
-		void OnMouseWheelScroll(sf::Event::MouseWheelScrollEvent& event) override;
+		virtual void OnMouseButtonUp(sf::Mouse::Button button) override;
+		virtual void OnMouseButtonDown(sf::Mouse::Button button) override;
+		virtual void OnMouseWheelScroll(sf::Event::MouseWheelScrollEvent& event) override;
 
-		void OnKeyDown(sf::Keyboard::Key key) override;
-		void OnKeyUp(sf::Keyboard::Key key) override;
+		virtual void OnKeyDown(sf::Keyboard::Key key) override;
+		virtual void OnKeyUp(sf::Keyboard::Key key) override;
 
-		void OnRender(sf::RenderTarget& target) override;
-		void OnUpdate(float dt) override;
+		virtual void OnRender(sf::RenderTarget& target) override;
+		virtual void OnUpdate(float dt) override;
 
-	  private:
+	  protected:
 		sf::FloatRect _selectionRect;
 	};
 } // namespace sse

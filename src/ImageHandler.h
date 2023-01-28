@@ -17,7 +17,7 @@ namespace sse {
 		static cv::Mat     TextureToOpenCVMat(const sf::Texture& texture);
 		static sf::Texture OpenCVMatToTexture(const cv::Mat& mat);
 
-		static std::vector<sf::IntRect> SliceFrames(const sf::Texture& texture, const sf::IntRect& roiRect);
+		static std::vector<sf::IntRect> ExtractFrames(const sf::Texture& texture, const sf::IntRect& roiRect);
 
 		static sf::Color ImColorToSFColor(const ImColor& color);
 		static ImColor   SFColorToImColor(const sf::Color& color);

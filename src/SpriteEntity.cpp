@@ -222,6 +222,14 @@ namespace sse {
 		_sprite.setTexture(_texture);
 	}
 
+	void SpriteEntity::Move(const sf::Vector2f delta) {
+		_position += delta;
+		for (auto& frame : _frames) {
+			frame.Rect.left += delta.x;
+			frame.Rect.top += delta.y;
+		};
+	}
+
 	std::vector<Frame>& SpriteEntity::GetFrames() {
 		return _frames;
 	}

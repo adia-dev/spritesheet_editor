@@ -243,8 +243,8 @@ namespace sse {
 
 	int Application::InitEntities() {
 		_spriteEntity =
-		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/broly/1.png"));
-		_spriteEntity->SetName("Broly");
+		    std::make_shared<SpriteEntity>(AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"));
+		_spriteEntity->SetName("Goku SSJG");
 
 		PushEntity(_spriteEntity);
 
@@ -262,12 +262,15 @@ namespace sse {
 	int Application::InitToolbox() {
 		std::shared_ptr<MoveTool>      moveTool      = std::make_shared<MoveTool>();
 		std::shared_ptr<SelectionTool> selectionTool = std::make_shared<SelectionTool>();
+		std::shared_ptr<ExtractTool>   extractTool   = std::make_shared<ExtractTool>();
 
 		moveTool->SetName("Move Tool");
 		selectionTool->SetName("Selection Tool");
+		extractTool->SetName("Extract Tool");
 
 		Toolbox::PushTool(moveTool, true);
 		Toolbox::PushTool(selectionTool);
+		Toolbox::PushTool(extractTool);
 
 		return 1;
 	}

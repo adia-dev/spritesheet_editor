@@ -31,6 +31,8 @@ namespace sse {
 		sf::Texture& GetOriginalTexture();
 		void         SetTexture(const sf::Texture& texture);
 
+		void Move(const sf::Vector2f delta) override;
+
 		// Frame management
 		std::vector<Frame>& GetFrames();
 		Frame&              GetFrame(int pos);
