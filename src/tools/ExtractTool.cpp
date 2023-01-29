@@ -7,6 +7,11 @@
 #include "ImageHandler.h"
 
 namespace sse {
+	void ExtractTool::OnDetach() {
+		_selectionRect.width  = 0;
+		_selectionRect.height = 0;
+	}
+
 	void ExtractTool::OnMouseMove() {
 		if (!Toolbox::GetWorkspaceRect().contains(Input::GetMousePosition())) return;
 

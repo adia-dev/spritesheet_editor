@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include "AnimationPreview.h"
 #include "AssetManager.h"
 #include "Hierarchy.h"
 #include "Input.h"

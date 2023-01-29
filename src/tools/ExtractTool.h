@@ -16,6 +16,8 @@ namespace sse {
 
 		//  bool OnHandleEvents(sf::Event& event) override;
 
+		void OnDetach() override;
+
 		void OnMouseMove() override;
 		void OnMouseLeave() override;
 		void OnMouseEnter() override;

@@ -43,6 +43,8 @@ namespace sse {
 		void                RemoveFrame(const Frame& frame);
 		void                SwapFrames(int lhs, int rhs);
 
+		bool HasFrames() const { return _frames.size() > 0; }
+
 	  private:
 		sf::Sprite  _sprite;
 		sf::Texture _texture;

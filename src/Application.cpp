@@ -255,6 +255,7 @@ namespace sse {
 		std::shared_ptr<Layer> viewport = std::make_shared<Viewport>(_renderTexture);
 		PushLayer(viewport);
 		PushLayer<Hierarchy>();
+		PushLayer<AnimationPreview>();
 
 		return 1;
 	}

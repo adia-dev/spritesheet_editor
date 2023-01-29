@@ -6,6 +6,10 @@
 #include "Application.h"
 
 namespace sse {
+	void SelectionTool::OnDetach() {
+		_selectionRect.width  = 0;
+		_selectionRect.height = 0;
+	}
 
 	void SelectionTool::OnMouseMove() {
 		if (!Toolbox::GetWorkspaceRect().contains(Input::GetMousePosition())) return;
