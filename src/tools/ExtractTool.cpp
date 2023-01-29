@@ -27,7 +27,10 @@ namespace sse {
 					sf::FloatRect area       = Maths::IntersectedArea(entity->GetBounds(), _selectionRect);
 					auto          frameRects = ImageHandler::ExtractFrames(
                         AssetManager::GetTexture("../assets/images/spritesheets/goku/ssjg.png"),
-                        sf::IntRect(area.left, area.top, area.width, area.height));
+                        sf::IntRect(area.left - entity->GetPosition().x,
+                                    area.top - entity->GetPosition().y,
+                                    area.width,
+                                    area.height));
 
 					std::vector<Frame> frames;
 					int                i = 0;
