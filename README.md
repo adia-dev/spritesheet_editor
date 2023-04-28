@@ -7,7 +7,7 @@ This is a spritesheet editor application written in C++ using SFML, OpenCV, ImGU
 ## Features
 
 - Slicing of spritesheets: The application allows you to select a specific portion of the spritesheet to create an animation.
-  ![Slicing](./assets/demo/extraction.png)
+  ![Slicing](./assets/demo/slice.png)
 
 - Preview animations: You can preview the animations that you have created to see how they look before exporting.
   ![Preview](./assets/demo/animation_preview.png)
