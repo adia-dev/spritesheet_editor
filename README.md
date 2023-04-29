@@ -10,7 +10,7 @@ This is a spritesheet editor application written in C++ using SFML, OpenCV, ImGU
   ![Slicing](./assets/demo/slice.png)
 
 - Preview animations: You can preview the animations that you have created to see how they look before exporting.
-  ![Preview](./assets/demo/animation_preview.png)
+  ![Preview](./assets/demo/animation_preview.gif)
 
 - Remove background color: You can remove the background color of a sprite to make it blend seamlessly with the rest of the game elements.
   ![Remove Background](./assets/demo/remove_bg.png)
